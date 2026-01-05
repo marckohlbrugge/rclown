@@ -3,9 +3,7 @@
     <div class="flex h-16 justify-between">
       <div class="flex">
         <div class="flex shrink-0 items-center">
-          <%= link_to root_path, class: "text-xl font-bold text-gray-900" do %>
-            Rclown
-          <% end %>
+          <%= link_to "🤡 Rclown", root_path, class: "text-xl font-bold text-gray-900" %>
         </div>
         <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
           <%= link_to "Backups", backups_path, class: nav_link_classes(controller_name == "backups" && action_name != "index" ? false : request.path.start_with?("/backups")) %>
