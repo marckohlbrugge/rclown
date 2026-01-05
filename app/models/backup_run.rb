@@ -3,7 +3,8 @@ class BackupRun < ApplicationRecord
 
   TIMEOUT = 12.hours
 
-  belongs_to :backup
+  belongs_to :backup, touch: true
+  broadcasts_refreshes_to :backup
 
   enum :status, {
     pending: "pending",

@@ -3,13 +3,8 @@ module Backups
     include BackupScoped
 
     def create
-      @run = @backup.execute
-
-      if @run
-        respond_to do |format|
-          format.turbo_stream
-          format.html { redirect_to @backup, notice: "Backup started." }
-        end
+      if @backup.execute
+        redirect_to @backup, notice: "Backup started."
       else
         redirect_to @backup, alert: "Backup is already running."
       end

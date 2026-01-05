@@ -1,27 +1,29 @@
-<%
-  if backup.running?
-    badge_class = "bg-blue-50 text-blue-700 ring-blue-600/20"
-    status_text = "Running"
-  elsif backup.last_run&.success?
-    badge_class = "bg-green-50 text-green-700 ring-green-600/20"
-    status_text = "Success"
-  elsif backup.last_run&.failed?
-    badge_class = "bg-red-50 text-red-700 ring-red-600/20"
-    status_text = "Failed"
-  elsif backup.last_run&.cancelled?
-    badge_class = "bg-yellow-50 text-yellow-700 ring-yellow-600/20"
-    status_text = "Cancelled"
-  else
-    badge_class = "bg-gray-50 text-gray-600 ring-gray-500/10"
-    status_text = "Pending"
-  end
-%>
-<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset <%= badge_class %>">
-  <% if backup.running? %>
-    <svg class="mr-1 size-3 animate-spin" viewBox="0 0 24 24" fill="none">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-    </svg>
-  <% end %>
-  <%= status_text %>
-</span>
+<div id="<%= dom_id(backup, :status) %>">
+  <%
+    if backup.running?
+      badge_class = "bg-blue-50 text-blue-700 ring-blue-600/20"
+      status_text = "Running"
+    elsif backup.last_run&.success?
+      badge_class = "bg-green-50 text-green-700 ring-green-600/20"
+      status_text = "Success"
+    elsif backup.last_run&.failed?
+      badge_class = "bg-red-50 text-red-700 ring-red-600/20"
+      status_text = "Failed"
+    elsif backup.last_run&.cancelled?
+      badge_class = "bg-yellow-50 text-yellow-700 ring-yellow-600/20"
+      status_text = "Cancelled"
+    else
+      badge_class = "bg-gray-50 text-gray-600 ring-gray-500/10"
+      status_text = "Pending"
+    end
+  %>
+  <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset <%= badge_class %>">
+    <% if backup.running? %>
+      <svg class="mr-1 size-3 animate-spin" viewBox="0 0 24 24" fill="none">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    <% end %>
+    <%= status_text %>
+  </span>
+</div>

@@ -1,3 +1,5 @@
+<%= turbo_stream_from @backup %>
+
 <% page_header @backup.name do %>
   <div class="flex items-center gap-x-3">
     <% if @backup.running? %>
@@ -28,14 +30,16 @@
       <dl class="divide-y divide-gray-100">
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-900">Source</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 flex items-center gap-2">
+            <%= render "providers/icon", provider: @backup.source_storage.provider, size_class: "size-4" %>
             <%= link_to @backup.source_storage.name, @backup.source_storage, class: "text-blue-600 hover:text-blue-500" %>
             <span class="text-gray-400">(<%= @backup.source_storage.provider.name %>)</span>
           </dd>
         </div>
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-900">Destination</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 flex items-center gap-2">
+            <%= render "providers/icon", provider: @backup.destination_storage.provider, size_class: "size-4" %>
             <%= link_to @backup.destination_storage.name, @backup.destination_storage, class: "text-blue-600 hover:text-blue-500" %>
             <span class="text-gray-400">(<%= @backup.destination_storage.provider.name %>)</span>
           </dd>
@@ -75,13 +79,12 @@
       <h3 class="text-base font-semibold text-gray-900">Recent Runs</h3>
     </div>
     <div class="border-t border-gray-100">
-      <% if @runs.any? %>
-        <ul role="list" class="divide-y divide-gray-100">
-          <% @runs.each do |run| %>
-            <%= render "backup_runs/run", run: run %>
-          <% end %>
-        </ul>
-      <% else %>
+      <ul id="<%= dom_id(@backup, :runs) %>" role="list" class="divide-y divide-gray-100">
+        <% @runs.each do |run| %>
+          <%= render "backup_runs/run", run: run %>
+        <% end %>
+      </ul>
+      <% if @runs.empty? %>
         <div class="px-4 py-8 text-center text-sm text-gray-500">
           No runs yet. Click "Run Now" to start your first backup.
         </div>
