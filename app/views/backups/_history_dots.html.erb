@@ -3,31 +3,27 @@
   today = Date.current
   days = (0..29).map { |i| today - i.days }.reverse
 %>
-<div class="flex gap-1 flex-wrap">
+<div class="flex items-center gap-0.5 flex-1">
   <% days.each do |day| %>
     <%
       day_runs = runs_by_day[day] || []
       if day_runs.empty?
-        dot_class = "bg-gray-200"
+        bar_class = "bg-gray-200"
         tooltip = "No runs"
-      elsif day_runs.any?(&:failed?)
-        dot_class = "bg-red-500"
-        tooltip = "#{day_runs.count(&:failed?)} failed"
       elsif day_runs.any?(&:success?)
-        dot_class = "bg-green-500"
+        bar_class = "bg-green-500"
         tooltip = "#{day_runs.count(&:success?)} successful"
       elsif day_runs.any?(&:running?)
-        dot_class = "bg-blue-500 animate-pulse"
+        bar_class = "bg-blue-500 animate-pulse"
         tooltip = "Running"
+      elsif day_runs.any?(&:failed?)
+        bar_class = "bg-red-500"
+        tooltip = "#{day_runs.count(&:failed?)} failed"
       else
-        dot_class = "bg-gray-300"
+        bar_class = "bg-gray-300"
         tooltip = "#{day_runs.size} runs"
       end
     %>
-    <div class="size-4 rounded-sm <%= dot_class %>" title="<%= day.strftime('%b %d') %>: <%= tooltip %>"></div>
+    <div class="flex-1 h-5 rounded-sm <%= bar_class %>" title="<%= day.strftime('%b %d') %>: <%= tooltip %>"></div>
   <% end %>
-</div>
-<div class="mt-2 flex justify-between text-xs text-gray-400">
-  <span>30 days ago</span>
-  <span>Today</span>
 </div>

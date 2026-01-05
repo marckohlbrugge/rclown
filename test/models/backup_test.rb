@@ -9,10 +9,12 @@ class BackupTest < ActiveSupport::TestCase
     assert @backup.valid?
   end
 
-  test "requires name" do
+  test "auto-generates name when blank" do
     @backup.name = nil
-    assert_not @backup.valid?
-    assert_includes @backup.errors[:name], "can't be blank"
+    @backup.valid?
+    assert_not_nil @backup.name
+    assert_includes @backup.name, @backup.source_storage.name
+    assert_includes @backup.name, @backup.destination_storage.name
   end
 
   test "requires source_storage" do

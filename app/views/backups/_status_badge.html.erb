@@ -1,27 +1,49 @@
 <div id="<%= dom_id(backup, :status) %>">
   <%
     if backup.running?
-      badge_class = "bg-blue-50 text-blue-700 ring-blue-600/20"
+      badge_class = "bg-blue-100 text-blue-700"
       status_text = "Running"
+      icon = :spinner
     elsif backup.last_run&.success?
-      badge_class = "bg-green-50 text-green-700 ring-green-600/20"
+      badge_class = "bg-green-100 text-green-700"
       status_text = "Success"
+      icon = :check
     elsif backup.last_run&.failed?
-      badge_class = "bg-red-50 text-red-700 ring-red-600/20"
+      badge_class = "bg-red-100 text-red-700"
       status_text = "Failed"
+      icon = :x
     elsif backup.last_run&.cancelled?
-      badge_class = "bg-yellow-50 text-yellow-700 ring-yellow-600/20"
+      badge_class = "bg-yellow-100 text-yellow-700"
       status_text = "Cancelled"
+      icon = :stop
     else
-      badge_class = "bg-gray-50 text-gray-600 ring-gray-500/10"
+      badge_class = "bg-gray-100 text-gray-600"
       status_text = "Pending"
+      icon = :clock
     end
   %>
-  <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset <%= badge_class %>">
-    <% if backup.running? %>
-      <svg class="mr-1 size-3 animate-spin" viewBox="0 0 24 24" fill="none">
+  <span class="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-sm font-medium <%= badge_class %>">
+    <% case icon %>
+    <% when :spinner %>
+      <svg class="size-4 animate-spin" viewBox="0 0 24 24" fill="none">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    <% when :check %>
+      <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+      </svg>
+    <% when :x %>
+      <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+      </svg>
+    <% when :stop %>
+      <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M2 10a8 8 0 1116 0 8 8 0 01-16 0zm5-2.25A.75.75 0 017.75 7h4.5a.75.75 0 01.75.75v4.5a.75.75 0 01-.75.75h-4.5a.75.75 0 01-.75-.75v-4.5z" clip-rule="evenodd" />
+      </svg>
+    <% when :clock %>
+      <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd" />
       </svg>
     <% end %>
     <%= status_text %>

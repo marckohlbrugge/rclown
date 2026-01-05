@@ -1,20 +1,20 @@
 <%= turbo_stream_from @backup %>
 
-<% page_header @backup.name do %>
+<% page_header "#{@backup.source_storage.name} → #{@backup.destination_storage.name}" do %>
   <div class="flex items-center gap-x-3">
     <% if @backup.running? %>
-      <%= button_to "Cancel", backup_cancellation_path(@backup), method: :post, class: "inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500" %>
+      <%= button_to "Cancel", backup_cancellation_path(@backup), method: :post, class: "inline-flex items-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-500" %>
     <% else %>
-      <%= button_to "Run Now", backup_execution_path(@backup), method: :post, class: "inline-flex items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" %>
-      <%= button_to "Dry Run", backup_dry_run_path(@backup), method: :post, class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <%= button_to "Run Now", backup_execution_path(@backup), method: :post, class: "inline-flex items-center rounded-xl bg-green-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-500" %>
+      <%= button_to "Dry Run", backup_dry_run_path(@backup), method: :post, class: "inline-flex items-center rounded-xl border-2 border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50" %>
     <% end %>
-    <%= link_to "Edit", edit_backup_path(@backup), class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+    <%= link_to "Edit", edit_backup_path(@backup), class: "inline-flex items-center rounded-xl border-2 border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50" %>
   </div>
 <% end %>
 
 <div class="space-y-6">
   <%# Backup Details %>
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+  <div class="bg-white rounded-2xl border-2 border-gray-200">
     <div class="px-4 py-6 sm:px-6 flex items-center justify-between">
       <h3 class="text-base font-semibold text-gray-900">Configuration</h3>
       <div class="flex items-center gap-x-2">
@@ -30,18 +30,22 @@
       <dl class="divide-y divide-gray-100">
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-900">Source</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 flex items-center gap-2">
-            <%= render "providers/icon", provider: @backup.source_storage.provider, size_class: "size-4" %>
-            <%= link_to @backup.source_storage.name, @backup.source_storage, class: "text-blue-600 hover:text-blue-500" %>
-            <span class="text-gray-400">(<%= @backup.source_storage.provider.name %>)</span>
+          <dd class="mt-1 sm:col-span-2 sm:mt-0">
+            <%= link_to @backup.source_storage, class: "inline-flex items-center gap-2 rounded-xl border-2 border-gray-200 px-3 py-2 hover:border-gray-300" do %>
+              <%= render "providers/icon", provider: @backup.source_storage.provider, size_class: "size-5" %>
+              <span class="font-medium text-gray-900"><%= @backup.source_storage.name %></span>
+              <span class="text-sm text-gray-500"><%= @backup.source_storage.provider.name %></span>
+            <% end %>
           </dd>
         </div>
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-900">Destination</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 flex items-center gap-2">
-            <%= render "providers/icon", provider: @backup.destination_storage.provider, size_class: "size-4" %>
-            <%= link_to @backup.destination_storage.name, @backup.destination_storage, class: "text-blue-600 hover:text-blue-500" %>
-            <span class="text-gray-400">(<%= @backup.destination_storage.provider.name %>)</span>
+          <dd class="mt-1 sm:col-span-2 sm:mt-0">
+            <%= link_to @backup.destination_storage, class: "inline-flex items-center gap-2 rounded-xl border-2 border-gray-200 px-3 py-2 hover:border-gray-300" do %>
+              <%= render "providers/icon", provider: @backup.destination_storage.provider, size_class: "size-5" %>
+              <span class="font-medium text-gray-900"><%= @backup.destination_storage.name %></span>
+              <span class="text-sm text-gray-500"><%= @backup.destination_storage.provider.name %></span>
+            <% end %>
           </dd>
         </div>
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -59,22 +63,18 @@
             <% end %>
           </dd>
         </div>
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-900">Last 30 Days</dt>
+          <dd class="mt-1 sm:col-span-2 sm:mt-0 flex items-center">
+            <%= render "backups/history_dots", backup: @backup %>
+          </dd>
+        </div>
       </dl>
     </div>
   </div>
 
-  <%# Run History Timeline %>
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-    <div class="px-4 py-6 sm:px-6">
-      <h3 class="text-base font-semibold text-gray-900">Last 30 Days</h3>
-    </div>
-    <div class="border-t border-gray-100 px-4 py-4 sm:px-6">
-      <%= render "backups/history_dots", backup: @backup %>
-    </div>
-  </div>
-
   <%# Recent Runs %>
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+  <div class="bg-white rounded-2xl border-2 border-gray-200">
     <div class="px-4 py-6 sm:px-6">
       <h3 class="text-base font-semibold text-gray-900">Recent Runs</h3>
     </div>

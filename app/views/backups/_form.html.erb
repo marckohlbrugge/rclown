@@ -1,63 +1,39 @@
-<%= form_with model: backup, class: "space-y-6" do |form| %>
+<%= form_with model: backup, class: "space-y-6", builder: FormBuilder do |form| %>
   <% if backup.errors.any? %>
-    <div class="rounded-md bg-red-50 p-4">
-      <div class="flex">
-        <div class="shrink-0">
-          <svg class="size-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-          </svg>
-        </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-800"><%= pluralize(backup.errors.count, "error") %> prohibited this backup from being saved:</h3>
-          <div class="mt-2 text-sm text-red-700">
-            <ul role="list" class="list-disc space-y-1 pl-5">
-              <% backup.errors.each do |error| %>
-                <li><%= error.full_message %></li>
-              <% end %>
-            </ul>
-          </div>
-        </div>
-      </div>
+    <div class="rounded-xl border-2 border-red-200 bg-red-50 p-4">
+      <h3 class="font-medium text-red-800"><%= pluralize(backup.errors.count, "error") %> prohibited this backup from being saved:</h3>
+      <ul class="mt-2 list-disc list-inside text-red-700">
+        <% backup.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
 
   <div>
-    <%= form.label :name, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= form.text_field :name, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm", placeholder: "Daily R2 to B2 Backup" %>
-    </div>
+    <%= form.label :source_storage_id, "Source Storage", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <%= form.collection_select :source_storage_id, Storage.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select source storage" }, { autofocus: true } %>
+    <p class="mt-2 text-sm text-gray-500">The storage location to back up from.</p>
   </div>
 
   <div>
-    <%= form.label :source_storage_id, "Source Storage", class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= form.collection_select :source_storage_id, Storage.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select source storage" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm" %>
-    </div>
-    <p class="mt-1 text-sm text-gray-500">The storage location to back up from.</p>
+    <%= form.label :destination_storage_id, "Destination Storage", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <%= form.collection_select :destination_storage_id, Storage.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select destination storage" }, {} %>
+    <p class="mt-2 text-sm text-gray-500">The storage location to back up to.</p>
   </div>
 
   <div>
-    <%= form.label :destination_storage_id, "Destination Storage", class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= form.collection_select :destination_storage_id, Storage.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select destination storage" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm" %>
-    </div>
-    <p class="mt-1 text-sm text-gray-500">The storage location to back up to.</p>
-  </div>
-
-  <div>
-    <%= form.label :schedule, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= form.select :schedule, Backup.schedules.keys.map { |k| [k.capitalize, k] }, {}, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm" %>
-    </div>
+    <%= form.label :schedule, class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <%= form.select :schedule, Backup.schedules.keys.map { |k| [k.capitalize, k] }, {} %>
   </div>
 
   <div class="flex items-center gap-x-3">
-    <%= form.check_box :enabled, class: "size-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600" %>
-    <%= form.label :enabled, "Enabled", class: "text-sm font-medium text-gray-900" %>
+    <%= form.check_box :enabled, class: "size-5 rounded-lg border-2 border-gray-300 text-blue-600 focus:ring-blue-500" %>
+    <%= form.label :enabled, "Enabled", class: "text-sm font-semibold text-gray-700" %>
   </div>
 
-  <div class="flex items-center justify-end gap-x-3 border-t border-gray-100 pt-6">
-    <%= link_to "Cancel", backup.persisted? ? backup : backups_path, class: "text-sm font-semibold text-gray-900" %>
-    <%= form.submit backup.persisted? ? "Update Backup" : "Create Backup", class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 cursor-pointer" %>
+  <div class="flex items-center justify-end gap-x-4 border-t border-gray-200 pt-6">
+    <%= link_to "Cancel", backup.persisted? ? backup : backups_path, class: "px-4 py-3 text-sm font-semibold text-gray-600 hover:text-gray-900" %>
+    <%= form.submit backup.persisted? ? "Update Backup" : "Create Backup", class: "rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-500 cursor-pointer" %>
   </div>
 <% end %>
