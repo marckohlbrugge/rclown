@@ -1,22 +1,24 @@
-<% flash.each do |type, message| %>
-  <% css_class = case type.to_sym
-    when :notice, :success then "bg-green-50 text-green-800 border-green-200"
-    when :alert, :error then "bg-red-50 text-red-800 border-red-200"
-    else "bg-blue-50 text-blue-800 border-blue-200"
-    end %>
-  <div class="mb-4 rounded-md border p-4 <%= css_class %>" data-controller="flash" data-flash-target="message">
-    <div class="flex">
-      <div class="flex-1">
-        <p class="text-sm font-medium"><%= message %></p>
-      </div>
-      <div class="ml-3">
-        <button type="button" class="inline-flex rounded-md p-1.5 hover:bg-white/50 focus:outline-none" data-action="flash#dismiss">
-          <span class="sr-only">Dismiss</span>
-          <svg class="size-5" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-          </svg>
-        </button>
+<div id="flash-messages" data-turbo-permanent>
+  <% flash.each do |type, message| %>
+    <% css_class = case type.to_sym
+      when :notice, :success then "bg-green-50 text-green-800 border-green-200"
+      when :alert, :error then "bg-red-50 text-red-800 border-red-200"
+      else "bg-blue-50 text-blue-800 border-blue-200"
+      end %>
+    <div class="mb-4 rounded-md border p-4 <%= css_class %>" data-controller="flash" data-flash-target="message">
+      <div class="flex">
+        <div class="flex-1">
+          <p class="text-sm font-medium"><%= message %></p>
+        </div>
+        <div class="ml-3">
+          <button type="button" class="inline-flex rounded-md p-1.5 hover:bg-white/50 focus:outline-none" data-action="flash#dismiss">
+            <span class="sr-only">Dismiss</span>
+            <svg class="size-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
