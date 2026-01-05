@@ -1,0 +1,11 @@
+<% page_header "Edit Backup" %>
+
+<div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+  <div class="px-4 py-6 sm:px-6">
+    <%= render "form", backup: @backup %>
+  </div>
+</div>
+
+<div class="mt-6">
+  <%= button_to "Delete Backup", @backup, method: :delete, class: "text-sm text-red-600 hover:text-red-500", data: { turbo_confirm: "Are you sure? This will delete all backup history." } %>
+</div>

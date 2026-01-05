@@ -1,0 +1,41 @@
+<%= tag.li id: dom_id(backup), class: "relative flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 sm:px-6" do %>
+  <div class="flex min-w-0 gap-x-4">
+    <div class="flex size-12 shrink-0 items-center justify-center rounded-lg <%= backup.enabled? ? 'bg-green-100' : 'bg-gray-100' %>">
+      <svg class="size-6 <%= backup.enabled? ? 'text-green-600' : 'text-gray-400' %>" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+      </svg>
+    </div>
+    <div class="min-w-0 flex-auto">
+      <p class="text-sm font-semibold text-gray-900">
+        <%= link_to backup.name, backup, class: "hover:underline" %>
+      </p>
+      <p class="mt-1 flex items-center gap-x-2 text-xs text-gray-500">
+        <span><%= backup.source_storage.name %></span>
+        <svg class="size-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+        </svg>
+        <span><%= backup.destination_storage.name %></span>
+      </p>
+    </div>
+  </div>
+  <div class="flex shrink-0 items-center gap-x-4">
+    <div class="hidden sm:flex sm:flex-col sm:items-end">
+      <div class="flex items-center gap-x-2">
+        <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset <%= backup.enabled? ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-gray-50 text-gray-600 ring-gray-500/10' %>">
+          <%= backup.schedule.capitalize %>
+        </span>
+        <%= render "backups/status_badge", backup: backup %>
+      </div>
+      <p class="mt-1 text-xs text-gray-500">
+        <% if backup.last_run_at %>
+          Last run <%= time_ago_in_words(backup.last_run_at) %> ago
+        <% else %>
+          Never run
+        <% end %>
+      </p>
+    </div>
+    <svg class="size-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+    </svg>
+  </div>
+<% end %>

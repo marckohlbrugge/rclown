@@ -1,0 +1,72 @@
+<%= form_with model: provider, class: "space-y-6" do |form| %>
+  <% if provider.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4">
+      <div class="flex">
+        <div class="shrink-0">
+          <svg class="size-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800"><%= pluralize(provider.errors.count, "error") %> prohibited this provider from being saved:</h3>
+          <div class="mt-2 text-sm text-red-700">
+            <ul role="list" class="list-disc space-y-1 pl-5">
+              <% provider.errors.each do |error| %>
+                <li><%= error.full_message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, class: "block text-sm font-medium text-gray-900" %>
+    <div class="mt-2">
+      <%= form.text_field :name, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm", placeholder: "My Cloudflare R2" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :provider_type, "Provider Type", class: "block text-sm font-medium text-gray-900" %>
+    <div class="mt-2">
+      <%= form.select :provider_type, Provider::PROVIDER_TYPES.map { |k, v| [v, k] }, { include_blank: "Select a provider type" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm", data: { controller: "provider-type", action: "change->provider-type#toggle" } %>
+    </div>
+  </div>
+
+  <div data-provider-type-target="endpoint">
+    <%= form.label :endpoint, class: "block text-sm font-medium text-gray-900" %>
+    <div class="mt-2">
+      <%= form.text_field :endpoint, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm font-mono", placeholder: "https://xxx.r2.cloudflarestorage.com" %>
+    </div>
+    <p class="mt-1 text-sm text-gray-500">Required for Cloudflare R2, optional for others.</p>
+  </div>
+
+  <div data-provider-type-target="region">
+    <%= form.label :region, class: "block text-sm font-medium text-gray-900" %>
+    <div class="mt-2">
+      <%= form.text_field :region, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm", placeholder: "us-east-1" %>
+    </div>
+    <p class="mt-1 text-sm text-gray-500">Required for Amazon S3, not needed for R2 or B2.</p>
+  </div>
+
+  <div>
+    <%= form.label :access_key_id, "Access Key ID", class: "block text-sm font-medium text-gray-900" %>
+    <div class="mt-2">
+      <%= form.text_field :access_key_id, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm font-mono", autocomplete: "off" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :secret_access_key, "Secret Access Key", class: "block text-sm font-medium text-gray-900" %>
+    <div class="mt-2">
+      <%= form.password_field :secret_access_key, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm font-mono", autocomplete: "off", value: provider.persisted? ? provider.secret_access_key : nil %>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-x-3 border-t border-gray-100 pt-6">
+    <%= link_to "Cancel", provider.persisted? ? provider : providers_path, class: "text-sm font-semibold text-gray-900" %>
+    <%= form.submit provider.persisted? ? "Update Provider" : "Create Provider", class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 cursor-pointer" %>
+  </div>
+<% end %>

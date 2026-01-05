@@ -1,0 +1,19 @@
+BACKUP FAILED: <%= @backup.name %>
+================================================================================
+
+The following backup has failed:
+
+Backup: <%= @backup.name %>
+Source: <%= @backup.source_storage.name %> (<%= @backup.source_storage.provider.name %>)
+Destination: <%= @backup.destination_storage.name %> (<%= @backup.destination_storage.provider.name %>)
+Started: <%= @backup_run.started_at&.strftime("%B %d, %Y at %I:%M %p") %>
+Exit Code: <%= @backup_run.exit_code %>
+
+<% if @backup_run.has_log? %>
+Log Output (last 50 lines):
+--------------------------------------------------------------------------------
+<%= @backup_run.log_preview(lines: 50) %>
+<% end %>
+
+--------------------------------------------------------------------------------
+This email was sent by Rclown backup monitoring.

@@ -1,0 +1,20 @@
+daily_backup:
+  name: "Daily R2 to B2"
+  source_storage: source_bucket
+  destination_storage: destination_bucket
+  schedule: daily
+  enabled: true
+
+weekly_backup:
+  name: "Weekly Backup"
+  source_storage: source_bucket
+  destination_storage: with_prefix
+  schedule: weekly
+  enabled: true
+
+disabled_backup:
+  name: "Disabled Backup"
+  source_storage: destination_bucket
+  destination_storage: with_prefix
+  schedule: daily
+  enabled: false

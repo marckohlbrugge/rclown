@@ -1,0 +1,13 @@
+source_bucket:
+  provider: cloudflare
+  bucket_name: "my-source-bucket"
+
+destination_bucket:
+  provider: backblaze
+  bucket_name: "my-backup-bucket"
+
+with_prefix:
+  provider: amazon
+  bucket_name: "shared-bucket"
+  prefix: "backups/daily"
+  display_name: "Daily Backups"

@@ -1,0 +1,29 @@
+<% page_header "Providers" do %>
+  <%= link_to "New Provider", new_provider_path, class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+<% end %>
+
+<div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+  <% if @providers.any? %>
+    <ul role="list" class="divide-y divide-gray-100">
+      <% @providers.each do |provider| %>
+        <%= render "provider", provider: provider %>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="px-4 py-12 text-center">
+      <svg class="mx-auto size-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2" />
+      </svg>
+      <h3 class="mt-2 text-sm font-semibold text-gray-900">No providers</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by creating a new storage provider.</p>
+      <div class="mt-6">
+        <%= link_to new_provider_path, class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" do %>
+          <svg class="-ml-0.5 mr-1.5 size-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+          </svg>
+          New Provider
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,19 @@
+cloudflare:
+  name: "Cloudflare R2"
+  provider_type: cloudflare_r2
+  endpoint: "https://test.r2.cloudflarestorage.com"
+  access_key_id: "test_access_key_cf"
+  secret_access_key: "test_secret_key_cf"
+
+backblaze:
+  name: "Backblaze B2"
+  provider_type: backblaze_b2
+  access_key_id: "test_access_key_b2"
+  secret_access_key: "test_secret_key_b2"
+
+amazon:
+  name: "Amazon S3"
+  provider_type: amazon_s3
+  region: "us-east-1"
+  access_key_id: "test_access_key_aws"
+  secret_access_key: "test_secret_key_aws"
