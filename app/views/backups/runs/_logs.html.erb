@@ -1,0 +1,25 @@
+<div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+  <div class="px-4 py-6 sm:px-6 flex items-center justify-between">
+    <h3 class="text-base font-semibold text-gray-900">Logs</h3>
+    <% if run.running? %>
+      <span class="inline-flex items-center gap-1 text-xs text-gray-500">
+        <span class="relative flex size-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full size-2 bg-blue-500"></span>
+        </span>
+        Live
+      </span>
+    <% end %>
+  </div>
+  <div class="border-t border-gray-100">
+    <% if run.has_log? %>
+      <div class="p-4 sm:p-6">
+        <pre data-controller="autoscroll" class="max-h-96 overflow-auto rounded-md bg-gray-900 p-4 text-xs text-gray-100 font-mono whitespace-pre-wrap"><%= run.raw_log %></pre>
+      </div>
+    <% else %>
+      <div class="px-4 py-8 text-center text-sm text-gray-500">
+        No logs available yet.
+      </div>
+    <% end %>
+  </div>
+</div>
