@@ -1,10 +1,8 @@
-# Rclown: Self-Hosted Object Storage Backup Dashboard 🤡
+# Rclown 🤡
 
-Rclown is an open-source backup dashboard that provides visibility into your object storage backups. Built on [rclone](https://rclone.org/), it lets you schedule and monitor bucket-to-bucket backups across providers like Cloudflare R2, Backblaze B2, and Amazon S3.
+A friendly web UI for backing up your object storage buckets.
 
-## Why Rclown?
-
-Cloud backup services charge monthly fees for what's essentially a cron job running rclone. Rclown gives you the same functionality—scheduled backups, status monitoring, failure notifications—without the recurring costs.
+Rclown wraps the battle-tested [rclone](https://rclone.org/) in a simple interface. Schedule backups, see what's happening, get notified when something breaks. Supports Cloudflare R2, Backblaze B2, Amazon S3, and other S3-compatible providers.
 
 ## Features
 
