@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full bg-gray-50">
+<html class="h-full">
   <head>
     <title><%= content_for(:title) || "Rclown" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -21,21 +21,78 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="h-full">
-    <div class="min-h-full">
-      <%= render "shared/nav" %>
-
-      <% if content_for?(:header) %>
-        <header class="bg-white shadow-sm">
-          <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-            <%= yield :header %>
+  <body class="h-full bg-white">
+    <div class="flex h-full">
+      <%# Sidebar %>
+      <aside class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 border-r border-gray-200">
+        <div class="flex flex-col flex-grow pt-6 pb-4 overflow-y-auto">
+          <%# Logo %>
+          <div class="px-6 mb-8">
+            <%= link_to root_path, class: "text-2xl font-bold text-gray-900" do %>
+              🤡 Rclown
+            <% end %>
           </div>
-        </header>
-      <% end %>
 
-      <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <%= render "shared/flash" %>
-        <%= yield %>
+          <%# Navigation %>
+          <nav class="flex-1 px-4 space-y-1">
+            <%= link_to backups_path, class: "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl #{request.path.start_with?('/backups') || request.path == '/' ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}" do %>
+              <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+              </svg>
+              Backups
+            <% end %>
+
+            <%= link_to providers_path, class: "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl #{request.path.start_with?('/providers') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}" do %>
+              <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 1.332-7.257 3 3 0 0 0-3.758-3.848 5.25 5.25 0 0 0-10.233 2.33A4.502 4.502 0 0 0 2.25 15Z" />
+              </svg>
+              Providers
+            <% end %>
+
+            <%= link_to storages_path, class: "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl #{request.path.start_with?('/storages') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}" do %>
+              <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+              </svg>
+              Storages
+            <% end %>
+
+            <%= link_to health_path, class: "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl #{request.path.start_with?('/health') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}" do %>
+              <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+              </svg>
+              Health
+            <% end %>
+          </nav>
+        </div>
+      </aside>
+
+      <%# Mobile header %>
+      <div class="lg:hidden fixed top-0 left-0 right-0 z-10 bg-white border-b border-gray-200">
+        <div class="flex items-center justify-between px-4 py-3">
+          <%= link_to "🤡 Rclown", root_path, class: "text-xl font-bold text-gray-900" %>
+        </div>
+        <div class="flex border-t border-gray-200">
+          <%= link_to "Backups", backups_path, class: "flex-1 py-2 text-center text-sm font-medium #{request.path.start_with?('/backups') || request.path == '/' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'}" %>
+          <%= link_to "Providers", providers_path, class: "flex-1 py-2 text-center text-sm font-medium #{request.path.start_with?('/providers') ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'}" %>
+          <%= link_to "Storages", storages_path, class: "flex-1 py-2 text-center text-sm font-medium #{request.path.start_with?('/storages') ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'}" %>
+          <%= link_to "Health", health_path, class: "flex-1 py-2 text-center text-sm font-medium #{request.path.start_with?('/health') ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600'}" %>
+        </div>
+      </div>
+
+      <%# Main content %>
+      <main class="flex-1 lg:pl-64">
+        <div class="pt-24 lg:pt-0">
+          <% if content_for?(:header) %>
+            <header class="px-6 py-6 lg:px-8 lg:py-8">
+              <%= yield :header %>
+            </header>
+          <% end %>
+
+          <div class="px-6 pb-8 lg:px-8">
+            <%= render "shared/flash" %>
+            <%= yield %>
+          </div>
+        </div>
       </main>
     </div>
   </body>
