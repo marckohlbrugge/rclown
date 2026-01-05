@@ -1,32 +1,32 @@
-<li class="relative flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 sm:px-6">
-  <div class="flex min-w-0 gap-x-4">
-    <div class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-gray-100">
-      <%= render "providers/icon", provider: storage.provider, size_class: "size-6" %>
+<li id="<%= dom_id(storage) %>" class="first:rounded-t-2xl last:rounded-b-2xl">
+  <%= link_to storage, class: "flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 rounded-[inherit] sm:px-6" do %>
+    <div class="flex min-w-0 gap-x-4">
+      <div class="flex size-12 shrink-0 items-center justify-center rounded-xl border-2 border-gray-200 bg-white">
+        <%= render "providers/icon", provider: storage.provider, size_class: "size-6" %>
+      </div>
+      <div class="min-w-0 flex-auto">
+        <p class="text-base font-semibold text-gray-900">
+          <%= storage.name %>
+        </p>
+        <p class="mt-1 text-sm text-gray-600 font-mono">
+          <%= storage.full_path %>
+        </p>
+      </div>
     </div>
-    <div class="min-w-0 flex-auto">
-      <p class="text-sm font-semibold text-gray-900">
-        <%= link_to storage.name, storage, class: "hover:underline" %>
-      </p>
-      <p class="mt-1 flex items-center gap-x-2 text-xs text-gray-500">
-        <span class="font-mono"><%= storage.full_path %></span>
-        <span class="text-gray-300">|</span>
-        <span class="inline-flex items-center gap-1">
-          <%= render "providers/icon", provider: storage.provider, size_class: "size-3" %>
-          <%= link_to storage.provider.name, storage.provider, class: "hover:underline" %>
-        </span>
-      </p>
+    <div class="flex shrink-0 items-center gap-x-4">
+      <div class="hidden sm:flex sm:flex-col sm:items-end">
+        <% if storage.in_use? %>
+          <span class="inline-flex items-center gap-1 rounded-lg bg-green-100 px-2.5 py-1 text-sm font-medium text-green-700">
+            <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+            </svg>
+            In use
+          </span>
+        <% end %>
+      </div>
+      <svg class="size-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+      </svg>
     </div>
-  </div>
-  <div class="flex shrink-0 items-center gap-x-4">
-    <div class="hidden sm:flex sm:flex-col sm:items-end">
-      <% if storage.in_use? %>
-        <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-          In use
-        </span>
-      <% end %>
-    </div>
-    <svg class="size-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-    </svg>
-  </div>
+  <% end %>
 </li>

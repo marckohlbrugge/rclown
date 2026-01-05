@@ -1,8 +1,8 @@
 <% page_header "Storages" do %>
-  <%= link_to "New Storage", new_storage_path, class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+  <%= link_to "New Storage", new_storage_path, class: "inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500" %>
 <% end %>
 
-<div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+<div class="bg-white rounded-2xl border-2 border-gray-200">
   <% if @storages.any? %>
     <ul role="list" class="divide-y divide-gray-100">
       <% @storages.each do |storage| %>
@@ -17,7 +17,7 @@
       <h3 class="mt-2 text-sm font-semibold text-gray-900">No storages</h3>
       <p class="mt-1 text-sm text-gray-500">Import buckets from providers or create a storage manually.</p>
       <div class="mt-6">
-        <%= link_to new_storage_path, class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" do %>
+        <%= link_to new_storage_path, class: "inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500" do %>
           <svg class="-ml-0.5 mr-1.5 size-5" viewBox="0 0 20 20" fill="currentColor">
             <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
           </svg>

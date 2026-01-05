@@ -1,59 +1,40 @@
-<%= form_with model: storage, class: "space-y-6" do |form| %>
+<%= form_with model: storage, class: "space-y-6", builder: FormBuilder do |form| %>
   <% if storage.errors.any? %>
-    <div class="rounded-md bg-red-50 p-4">
-      <div class="flex">
-        <div class="shrink-0">
-          <svg class="size-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-          </svg>
-        </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-800"><%= pluralize(storage.errors.count, "error") %> prohibited this storage from being saved:</h3>
-          <div class="mt-2 text-sm text-red-700">
-            <ul role="list" class="list-disc space-y-1 pl-5">
-              <% storage.errors.each do |error| %>
-                <li><%= error.full_message %></li>
-              <% end %>
-            </ul>
-          </div>
-        </div>
-      </div>
+    <div class="rounded-xl border-2 border-red-200 bg-red-50 p-4">
+      <h3 class="font-medium text-red-800"><%= pluralize(storage.errors.count, "error") %> prohibited this storage from being saved:</h3>
+      <ul class="mt-2 list-disc list-inside text-red-700">
+        <% storage.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
 
   <div>
-    <%= form.label :provider_id, "Provider", class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= form.collection_select :provider_id, Provider.order(:name), :id, :name, { include_blank: "Select a provider" }, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm" %>
-    </div>
+    <%= form.label :provider_id, "Provider", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <%= form.collection_select :provider_id, Provider.order(:name), :id, :name, { include_blank: "Select a provider" }, {} %>
   </div>
 
   <div>
-    <%= form.label :bucket_name, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= form.text_field :bucket_name, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm font-mono", placeholder: "my-bucket-name" %>
-    </div>
-    <p class="mt-1 text-sm text-gray-500">The name of the bucket in your storage provider.</p>
+    <%= form.label :bucket_name, class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <%= form.text_field :bucket_name, class: "font-mono", placeholder: "my-bucket-name" %>
+    <p class="mt-2 text-sm text-gray-500">The name of the bucket in your storage provider.</p>
   </div>
 
   <div>
-    <%= form.label :prefix, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= form.text_field :prefix, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm font-mono", placeholder: "backups/daily" %>
-    </div>
-    <p class="mt-1 text-sm text-gray-500">Optional path prefix within the bucket (like a folder).</p>
+    <%= form.label :prefix, class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <%= form.text_field :prefix, class: "font-mono", placeholder: "backups/daily" %>
+    <p class="mt-2 text-sm text-gray-500">Optional path prefix within the bucket (like a folder).</p>
   </div>
 
   <div>
-    <%= form.label :display_name, class: "block text-sm font-medium text-gray-900" %>
-    <div class="mt-2">
-      <%= form.text_field :display_name, class: "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm", placeholder: "My Primary Backup" %>
-    </div>
-    <p class="mt-1 text-sm text-gray-500">Optional friendly name for this storage. Defaults to bucket name.</p>
+    <%= form.label :display_name, class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <%= form.text_field :display_name, placeholder: "My Primary Backup" %>
+    <p class="mt-2 text-sm text-gray-500">Optional friendly name for this storage. Defaults to bucket name.</p>
   </div>
 
-  <div class="flex items-center justify-end gap-x-3 border-t border-gray-100 pt-6">
-    <%= link_to "Cancel", storage.persisted? ? storage : storages_path, class: "text-sm font-semibold text-gray-900" %>
-    <%= form.submit storage.persisted? ? "Update Storage" : "Create Storage", class: "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 cursor-pointer" %>
+  <div class="flex items-center justify-end gap-x-4 border-t border-gray-200 pt-6">
+    <%= link_to "Cancel", storage.persisted? ? storage : storages_path, class: "px-4 py-3 text-sm font-semibold text-gray-600 hover:text-gray-900" %>
+    <%= form.submit storage.persisted? ? "Update Storage" : "Create Storage", class: "rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-500 cursor-pointer" %>
   </div>
 <% end %>

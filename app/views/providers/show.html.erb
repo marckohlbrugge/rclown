@@ -1,11 +1,11 @@
 <% page_header @provider.name do %>
-  <%= link_to "Edit", edit_provider_path(@provider), class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
-  <%= button_to "Delete", @provider, method: :delete, class: "ml-3 inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500", data: { turbo_confirm: "Are you sure you want to delete this provider? All associated storages will also be deleted." } %>
+  <%= link_to "Edit", edit_provider_path(@provider), class: "inline-flex items-center rounded-xl border-2 border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50" %>
+  <%= button_to "Delete", @provider, method: :delete, class: "ml-3 inline-flex items-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-500", data: { turbo_confirm: "Are you sure you want to delete this provider? All associated storages will also be deleted." } %>
 <% end %>
 
 <div class="space-y-6">
   <%# Provider Details %>
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+  <div class="bg-white rounded-2xl border-2 border-gray-200">
     <div class="px-4 py-6 sm:px-6">
       <h3 class="text-base font-semibold text-gray-900">Provider Details</h3>
     </div>
@@ -14,7 +14,8 @@
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-900">Type</dt>
           <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
-            <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+            <span class="inline-flex items-center gap-1.5">
+              <%= render "providers/icon", provider: @provider, size_class: "size-4" %>
               <%= @provider.provider_type_name %>
             </span>
           </dd>
@@ -46,7 +47,7 @@
   </div>
 
   <%# Bucket Discovery %>
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+  <div class="bg-white rounded-2xl border-2 border-gray-200">
     <div class="px-4 py-6 sm:px-6 flex items-center justify-between">
       <h3 class="text-base font-semibold text-gray-900">Buckets</h3>
       <%= link_to provider_buckets_path(@provider), data: { turbo_frame: dom_id(@provider, :buckets) }, class: "text-sm font-medium text-blue-600 hover:text-blue-500" do %>
@@ -65,7 +66,7 @@
 
   <%# Imported Storages %>
   <% if @provider.storages.any? %>
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+    <div class="bg-white rounded-2xl border-2 border-gray-200">
       <div class="px-4 py-6 sm:px-6">
         <h3 class="text-base font-semibold text-gray-900">Imported Storages</h3>
       </div>

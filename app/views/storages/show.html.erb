@@ -1,12 +1,12 @@
 <% page_header @storage.name do %>
-  <%= link_to "Edit", edit_storage_path(@storage), class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+  <%= link_to "Edit", edit_storage_path(@storage), class: "inline-flex items-center rounded-xl border-2 border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50" %>
   <% unless @storage.in_use? %>
-    <%= button_to "Delete", @storage, method: :delete, class: "ml-3 inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500", data: { turbo_confirm: "Are you sure you want to delete this storage?" } %>
+    <%= button_to "Delete", @storage, method: :delete, class: "ml-3 inline-flex items-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-500", data: { turbo_confirm: "Are you sure you want to delete this storage?" } %>
   <% end %>
 <% end %>
 
 <div class="space-y-6">
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+  <div class="bg-white rounded-2xl border-2 border-gray-200">
     <div class="px-4 py-6 sm:px-6">
       <h3 class="text-base font-semibold text-gray-900">Storage Details</h3>
     </div>
@@ -49,7 +49,7 @@
   </div>
 
   <% if @storage.backups.any? %>
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+    <div class="bg-white rounded-2xl border-2 border-gray-200">
       <div class="px-4 py-6 sm:px-6">
         <h3 class="text-base font-semibold text-gray-900">Used in Backups</h3>
       </div>
