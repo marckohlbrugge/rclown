@@ -23,7 +23,7 @@
               Imported
             </span>
           <% else %>
-            <%= button_to "Import", provider_buckets_path(@provider, bucket_name: bucket_name), method: :post, class: "rounded bg-blue-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-blue-500" %>
+            <%= button_to "Import", provider_buckets_path(@provider, bucket_name: bucket_name), method: :post, class: "rounded bg-blue-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-blue-500", data: { turbo_frame: "_top" } %>
           <% end %>
         </li>
       <% end %>
