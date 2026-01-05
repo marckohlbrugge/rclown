@@ -65,7 +65,7 @@ class Rclone::Executor
         "--config", config_file.path,
         "--stats", "30s",
         "--stats-one-line",
-        "--log-level", "INFO",
+        "--log-level", "NOTICE",
         "--disable", "ServerSideAcrossConfigs"
       ]
 

@@ -14,7 +14,6 @@ successful_run:
   started_at: <%= 1.hour.ago %>
   finished_at: <%= 30.minutes.ago %>
   exit_code: 0
-  raw_log: "Transferred: 100 files, 1.5 GiB"
 
 failed_run:
   backup: daily_backup
@@ -22,7 +21,6 @@ failed_run:
   started_at: <%= 2.hours.ago %>
   finished_at: <%= 2.hours.ago + 5.minutes %>
   exit_code: 1
-  raw_log: "Error: permission denied"
 
 dry_run:
   backup: weekly_backup
@@ -31,4 +29,3 @@ dry_run:
   finished_at: <%= 3.hours.ago + 1.minute %>
   exit_code: 0
   dry_run: true
-  raw_log: "Would transfer: 50 files"

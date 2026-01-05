@@ -67,21 +67,32 @@ class BackupRunTest < ActiveSupport::TestCase
   end
 
   test "has_log? returns true when log present" do
-    assert @successful_run.has_log?
+    run = BackupRun.create!(backup: backups(:daily_backup), status: :pending)
+    run.append_log("Some log content")
+    assert run.has_log?
+  ensure
+    run&.clear_log
+    run&.destroy
   end
 
   test "has_log? returns false when log empty" do
-    @run.raw_log = nil
-    assert_not @run.has_log?
+    run = BackupRun.create!(backup: backups(:daily_backup), status: :pending)
+    run.clear_log
+    assert_not run.has_log?
+  ensure
+    run&.destroy
   end
 
   test "log_preview returns last N lines" do
-    run = BackupRun.new(backup: backups(:daily_backup))
-    run.raw_log = (1..50).map { |i| "Line #{i}" }.join("\n")
+    run = BackupRun.create!(backup: backups(:daily_backup), status: :pending)
+    run.append_log((1..50).map { |i| "Line #{i}" }.join("\n"))
     preview = run.log_preview(lines: 5)
     assert_includes preview, "Line 50"
     assert_includes preview, "Line 46"
     assert_not_includes preview, "Line 1"
+  ensure
+    run&.clear_log
+    run&.destroy
   end
 
   # ProcessManageable tests
