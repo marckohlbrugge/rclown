@@ -41,7 +41,7 @@
     </div>
     <div class="min-w-0 flex-auto">
       <p class="text-sm font-medium text-gray-900">
-        <%= link_to backup_run_path(run), class: "hover:underline" do %>
+        <%= link_to backup_run_path(run.backup, run), class: "hover:underline" do %>
           <%= run.status.capitalize %>
           <% if run.dry_run? %>
             <span class="text-gray-400">(Dry Run)</span>

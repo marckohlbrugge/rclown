@@ -1,3 +1,5 @@
+<%= turbo_stream_from @backup %>
+
 <% page_header "Backup Run ##{@run.id}" do %>
   <%= link_to "Back to Backup", @backup, class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
 <% end %>
@@ -77,21 +79,5 @@
     </div>
   </div>
 
-  <%# Logs %>
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-    <div class="px-4 py-6 sm:px-6">
-      <h3 class="text-base font-semibold text-gray-900">Logs</h3>
-    </div>
-    <div class="border-t border-gray-100">
-      <% if @run.has_log? %>
-        <div class="p-4 sm:p-6">
-          <pre class="max-h-96 overflow-auto rounded-md bg-gray-900 p-4 text-xs text-gray-100 font-mono whitespace-pre-wrap"><%= @run.raw_log %></pre>
-        </div>
-      <% else %>
-        <div class="px-4 py-8 text-center text-sm text-gray-500">
-          No logs available yet.
-        </div>
-      <% end %>
-    </div>
-  </div>
+  <%= render "backups/runs/logs", run: @run %>
 </div>
