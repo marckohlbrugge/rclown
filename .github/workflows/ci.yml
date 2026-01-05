@@ -86,8 +86,9 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          # REDIS_URL: redis://localhost:6379/0
+          ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY: test-primary-key-min-12-chars
+          ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY: test-deterministic-key-12ch
+          ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT: test-derivation-salt-12chars
         run: bin/rails db:test:prepare test
 
   system-test:
@@ -111,8 +112,9 @@ jobs:
       - name: Run System Tests
         env:
           RAILS_ENV: test
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          # REDIS_URL: redis://localhost:6379/0
+          ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY: test-primary-key-min-12-chars
+          ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY: test-deterministic-key-12ch
+          ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT: test-derivation-salt-12chars
         run: bin/rails db:test:prepare test:system
 
       - name: Keep screenshots from failed system tests
