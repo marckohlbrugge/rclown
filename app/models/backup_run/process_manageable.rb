@@ -1,3 +1,5 @@
+require "open3"
+
 module BackupRun::ProcessManageable
   extend ActiveSupport::Concern
 
@@ -40,8 +42,8 @@ module BackupRun::ProcessManageable
     return nil unless process_running?
 
     begin
-      output = `ps -p #{rclone_pid} -o %cpu,%mem 2>/dev/null`.strip
-      lines = output.split("\n")
+      output, _status = Open3.capture2("ps", "-p", rclone_pid.to_s, "-o", "%cpu,%mem")
+      lines = output.strip.split("\n")
       return nil if lines.length < 2
 
       values = lines[1].split
