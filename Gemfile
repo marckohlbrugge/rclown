@@ -66,5 +66,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   # Pin minitest for Rails 8.1 compatibility
-  gem "minitest", "~> 5.25"
+  gem "minitest", "~> 6.0"
 end
