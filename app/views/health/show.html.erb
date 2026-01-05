@@ -73,7 +73,7 @@
               <div class="flex items-center justify-between">
                 <div class="min-w-0">
                   <p class="text-sm font-medium text-gray-900">
-                    <%= link_to run.backup.name, backup_run_path(run), class: "hover:underline" %>
+                    <%= link_to run.backup.name, backup_run_path(run.backup, run), class: "hover:underline" %>
                   </p>
                   <p class="text-xs text-gray-500">
                     Started <%= time_ago_in_words(run.started_at) %> ago
