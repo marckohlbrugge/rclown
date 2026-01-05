@@ -1,6 +1,6 @@
 # Rclown 🤡
 
-A friendly web UI for backing up your object storage buckets.
+A friendly web UI for backing up your object storage buckets by [Marc Köhlbrugge](https://x.com/marckohlbrugge).
 
 Rclown wraps the battle-tested [rclone](https://rclone.org/) in a simple interface. Schedule backups, see what's happening, get notified when something breaks. Supports Cloudflare R2, Backblaze B2, Amazon S3, and other S3-compatible providers.
 
@@ -64,4 +64,4 @@ Bug fixes and small improvements are welcome as pull requests. For larger change
 
 ## License
 
-See [LICENSE](LICENSE) for details.
+Rclown is released under the [O'Saasy License](https://osaasy.dev/). See [LICENSE.md](LICENSE.md) for details.
