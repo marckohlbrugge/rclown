@@ -1,0 +1,11 @@
+<%# Provider icon partial - pass provider or provider_type, and optional size class %>
+<% provider_type = local_assigns[:provider_type] || provider&.provider_type %>
+<% size_class = local_assigns[:size_class] || "size-5" %>
+
+<% if provider_type.present? %>
+  <%= image_tag "providers/#{provider_type}.png", class: "#{size_class} rounded", alt: provider_type.titleize %>
+<% else %>
+  <svg class="<%= size_class %> text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2" />
+  </svg>
+<% end %>

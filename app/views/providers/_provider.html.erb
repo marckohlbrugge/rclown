@@ -1,9 +1,7 @@
 <li class="relative flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 sm:px-6">
   <div class="flex min-w-0 gap-x-4">
     <div class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-gray-100">
-      <svg class="size-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2" />
-      </svg>
+      <%= render "providers/icon", provider: provider, size_class: "size-6" %>
     </div>
     <div class="min-w-0 flex-auto">
       <p class="text-sm font-semibold text-gray-900">
