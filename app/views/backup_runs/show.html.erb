@@ -1,0 +1,97 @@
+<% page_header "Backup Run ##{@run.id}" do %>
+  <%= link_to "Back to Backup", @backup, class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+<% end %>
+
+<div class="space-y-6">
+  <%# Run Details %>
+  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+    <div class="px-4 py-6 sm:px-6 flex items-center justify-between">
+      <h3 class="text-base font-semibold text-gray-900">Run Details</h3>
+      <%
+        case @run.status
+        when "success"
+          badge_class = "bg-green-50 text-green-700 ring-green-600/20"
+        when "failed"
+          badge_class = "bg-red-50 text-red-700 ring-red-600/20"
+        when "running"
+          badge_class = "bg-blue-50 text-blue-700 ring-blue-600/20"
+        when "cancelled"
+          badge_class = "bg-yellow-50 text-yellow-700 ring-yellow-600/20"
+        else
+          badge_class = "bg-gray-50 text-gray-600 ring-gray-500/10"
+        end
+      %>
+      <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset <%= badge_class %>">
+        <%= @run.status.capitalize %>
+        <% if @run.dry_run? %> (Dry Run)<% end %>
+      </span>
+    </div>
+    <div class="border-t border-gray-100">
+      <dl class="divide-y divide-gray-100">
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-900">Backup</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+            <%= link_to @backup.name, @backup, class: "text-blue-600 hover:text-blue-500" %>
+          </dd>
+        </div>
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-900">Started</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+            <%= @run.started_at&.strftime("%B %d, %Y at %I:%M:%S %p") || "Not started" %>
+          </dd>
+        </div>
+        <% if @run.finished_at %>
+          <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Finished</dt>
+            <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+              <%= @run.finished_at.strftime("%B %d, %Y at %I:%M:%S %p") %>
+            </dd>
+          </div>
+        <% end %>
+        <% if @run.formatted_duration %>
+          <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Duration</dt>
+            <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0"><%= @run.formatted_duration %></dd>
+          </div>
+        <% end %>
+        <% if @run.exit_code %>
+          <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Exit Code</dt>
+            <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+              <code class="rounded bg-gray-100 px-2 py-1 text-xs"><%= @run.exit_code %></code>
+            </dd>
+          </div>
+        <% end %>
+        <% if @run.rclone_pid && @run.running? %>
+          <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Process ID</dt>
+            <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+              <%= @run.rclone_pid %>
+              <% if stats = @run.process_stats %>
+                <span class="ml-2 text-gray-400">CPU: <%= stats[:cpu] %>% | Mem: <%= stats[:memory] %>%</span>
+              <% end %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+
+  <%# Logs %>
+  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+    <div class="px-4 py-6 sm:px-6">
+      <h3 class="text-base font-semibold text-gray-900">Logs</h3>
+    </div>
+    <div class="border-t border-gray-100">
+      <% if @run.has_log? %>
+        <div class="p-4 sm:p-6">
+          <pre class="max-h-96 overflow-auto rounded-md bg-gray-900 p-4 text-xs text-gray-100 font-mono whitespace-pre-wrap"><%= @run.raw_log %></pre>
+        </div>
+      <% else %>
+        <div class="px-4 py-8 text-center text-sm text-gray-500">
+          No logs available yet.
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

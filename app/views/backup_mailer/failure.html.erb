@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.5; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #dc2626; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+    .content { background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; }
+    .details { background: white; border: 1px solid #e5e7eb; border-radius: 4px; padding: 15px; margin: 15px 0; }
+    .label { font-weight: 600; color: #6b7280; }
+    .value { color: #111827; }
+    pre { background: #1f2937; color: #f3f4f6; padding: 15px; border-radius: 4px; overflow-x: auto; font-size: 12px; }
+    .footer { color: #6b7280; font-size: 12px; margin-top: 20px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 style="margin: 0; font-size: 24px;">Backup Failed</h1>
+    </div>
+    <div class="content">
+      <p>The following backup has failed:</p>
+
+      <div class="details">
+        <p><span class="label">Backup:</span> <span class="value"><%= @backup.name %></span></p>
+        <p><span class="label">Source:</span> <span class="value"><%= @backup.source_storage.name %> (<%= @backup.source_storage.provider.name %>)</span></p>
+        <p><span class="label">Destination:</span> <span class="value"><%= @backup.destination_storage.name %> (<%= @backup.destination_storage.provider.name %>)</span></p>
+        <p><span class="label">Started:</span> <span class="value"><%= @backup_run.started_at&.strftime("%B %d, %Y at %I:%M %p") %></span></p>
+        <p><span class="label">Exit Code:</span> <span class="value"><%= @backup_run.exit_code %></span></p>
+      </div>
+
+      <% if @backup_run.has_log? %>
+        <p><strong>Log Output:</strong></p>
+        <pre><%= @backup_run.log_preview(lines: 50) %></pre>
+      <% end %>
+
+      <div class="footer">
+        <p>This email was sent by Rclown backup monitoring.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

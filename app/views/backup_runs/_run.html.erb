@@ -1,0 +1,71 @@
+<li class="flex items-center justify-between gap-x-6 px-4 py-4 sm:px-6 hover:bg-gray-50">
+  <div class="flex min-w-0 gap-x-4">
+    <%
+      case run.status
+      when "success"
+        icon_bg = "bg-green-100"
+        icon_color = "text-green-600"
+      when "failed"
+        icon_bg = "bg-red-100"
+        icon_color = "text-red-600"
+      when "running"
+        icon_bg = "bg-blue-100"
+        icon_color = "text-blue-600"
+      when "cancelled"
+        icon_bg = "bg-yellow-100"
+        icon_color = "text-yellow-600"
+      else
+        icon_bg = "bg-gray-100"
+        icon_color = "text-gray-600"
+      end
+    %>
+    <div class="flex size-10 shrink-0 items-center justify-center rounded-full <%= icon_bg %>">
+      <% if run.running? %>
+        <svg class="size-5 <%= icon_color %> animate-spin" viewBox="0 0 24 24" fill="none">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      <% elsif run.success? %>
+        <svg class="size-5 <%= icon_color %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      <% elsif run.failed? %>
+        <svg class="size-5 <%= icon_color %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      <% else %>
+        <svg class="size-5 <%= icon_color %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      <% end %>
+    </div>
+    <div class="min-w-0 flex-auto">
+      <p class="text-sm font-medium text-gray-900">
+        <%= link_to backup_run_path(run), class: "hover:underline" do %>
+          <%= run.status.capitalize %>
+          <% if run.dry_run? %>
+            <span class="text-gray-400">(Dry Run)</span>
+          <% end %>
+        <% end %>
+      </p>
+      <p class="mt-1 text-xs text-gray-500">
+        <% if run.started_at %>
+          Started <%= time_ago_in_words(run.started_at) %> ago
+          <% if run.formatted_duration %>
+            &middot; Duration: <%= run.formatted_duration %>
+          <% end %>
+        <% else %>
+          Created <%= time_ago_in_words(run.created_at) %> ago
+        <% end %>
+      </p>
+    </div>
+  </div>
+  <div class="flex shrink-0 items-center gap-x-4">
+    <% if run.exit_code %>
+      <span class="text-xs text-gray-400">Exit code: <%= run.exit_code %></span>
+    <% end %>
+    <svg class="size-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+    </svg>
+  </div>
+</li>

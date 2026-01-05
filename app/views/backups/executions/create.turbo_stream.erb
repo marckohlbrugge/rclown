@@ -1,0 +1,2 @@
+<%= turbo_stream.prepend dom_id(@backup, :runs), partial: "backup_runs/run", locals: { run: @run } %>
+<%= turbo_stream.replace dom_id(@backup, :status), partial: "backups/status_badge", locals: { backup: @backup.reload } %>

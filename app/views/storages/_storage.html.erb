@@ -1,0 +1,31 @@
+<li class="relative flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 sm:px-6">
+  <div class="flex min-w-0 gap-x-4">
+    <div class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-gray-100">
+      <svg class="size-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+      </svg>
+    </div>
+    <div class="min-w-0 flex-auto">
+      <p class="text-sm font-semibold text-gray-900">
+        <%= link_to storage.name, storage, class: "hover:underline" %>
+      </p>
+      <p class="mt-1 flex items-center gap-x-2 text-xs text-gray-500">
+        <span class="font-mono"><%= storage.full_path %></span>
+        <span class="text-gray-300">|</span>
+        <%= link_to storage.provider.name, storage.provider, class: "hover:underline" %>
+      </p>
+    </div>
+  </div>
+  <div class="flex shrink-0 items-center gap-x-4">
+    <div class="hidden sm:flex sm:flex-col sm:items-end">
+      <% if storage.in_use? %>
+        <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+          In use
+        </span>
+      <% end %>
+    </div>
+    <svg class="size-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+    </svg>
+  </div>
+</li>
