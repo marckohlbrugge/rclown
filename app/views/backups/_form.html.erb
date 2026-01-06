@@ -1,4 +1,4 @@
-<%= form_with model: backup, class: "space-y-6", builder: FormBuilder do |form| %>
+<%= form_with model: backup, class: "space-y-6" do |form| %>
   <% if backup.errors.any? %>
     <div class="rounded-xl border-2 border-red-200 bg-red-50 p-4">
       <h3 class="font-medium text-red-800"><%= pluralize(backup.errors.count, "error") %> prohibited this backup from being saved:</h3>
@@ -10,21 +10,36 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :source_storage_id, "Source Storage", class: "block text-sm font-semibold text-gray-700 mb-2" %>
-    <%= form.collection_select :source_storage_id, Storage.available_as_source.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select source storage" }, { autofocus: true } %>
-    <p class="mt-2 text-sm text-gray-500">The storage location to back up from.</p>
-  </div>
+  <div class="flex items-start gap-4">
+    <div class="flex-1">
+      <%= form.label :source_storage_id, "Source", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <%= form.collection_select :source_storage_id, Storage.available_as_source.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select source" }, { autofocus: true } %>
+    </div>
 
-  <div>
-    <%= form.label :destination_storage_id, "Destination Storage", class: "block text-sm font-semibold text-gray-700 mb-2" %>
-    <%= form.collection_select :destination_storage_id, Storage.available_as_destination.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select destination storage" }, {} %>
-    <p class="mt-2 text-sm text-gray-500">The storage location to back up to.</p>
+    <div class="flex items-center pt-7 text-gray-400">
+      <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+      </svg>
+    </div>
+
+    <div class="flex-1">
+      <%= form.label :destination_storage_id, "Destination", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <%= form.collection_select :destination_storage_id, Storage.available_as_destination.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select destination" }, {} %>
+    </div>
   </div>
 
   <div>
     <%= form.label :schedule, class: "block text-sm font-semibold text-gray-700 mb-2" %>
-    <%= form.select :schedule, Backup.schedules.keys.map { |k| [k.capitalize, k] }, {} %>
+    <div class="flex gap-3">
+      <% Backup.schedules.keys.each do |schedule| %>
+        <div class="flex-1">
+          <%= form.radio_button :schedule, schedule, class: "sr-only peer" %>
+          <%= form.label :schedule, value: schedule, class: "flex items-center justify-center px-4 py-3 border-2 rounded-xl cursor-pointer transition-colors border-gray-200 hover:border-gray-300 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:hover:border-blue-400" do %>
+            <span class="text-sm font-medium text-gray-700"><%= schedule.capitalize %></span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 
   <div class="flex items-center gap-x-3">
