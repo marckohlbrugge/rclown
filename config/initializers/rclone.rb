@@ -1,6 +1,7 @@
 # Verify rclone is installed at boot time
 Rails.application.config.after_initialize do
   next if Rails.env.test?
+  next if ENV["SECRET_KEY_BASE_DUMMY"].present?
 
   begin
     version_output = `rclone version 2>&1`
