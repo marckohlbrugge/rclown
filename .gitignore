@@ -40,3 +40,9 @@
 # Ignore key files for decrypting credentials and more.
 /config/credentials/*.key
 
+# Ignore SaaS deploy config (contains server IPs)
+/config/deploy.saas.yml
+
+# Ignore SaaS secrets (but keep the template)
+/.kamal/secrets.saas
+
