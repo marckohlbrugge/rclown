@@ -6,17 +6,25 @@ module Authentication
   end
 
   private
-    def authenticate
-      authenticate_or_request_with_http_basic("Rclown") do |username, password|
-        username == admin_username && password == admin_password
-      end
-    end
 
-    def admin_username
-      Rails.application.credentials.dig(:admin, :username) || ENV["ADMIN_USERNAME"] || "admin"
-    end
+  def authenticate
+    return unless http_auth_configured?
 
-    def admin_password
-      Rails.application.credentials.dig(:admin, :password) || ENV["ADMIN_PASSWORD"]
+    authenticate_or_request_with_http_basic do |username, password|
+      ActiveSupport::SecurityUtils.secure_compare(username, http_auth_username) &
+        ActiveSupport::SecurityUtils.secure_compare(password, http_auth_password)
     end
+  end
+
+  def http_auth_configured?
+    http_auth_username.present? && http_auth_password.present?
+  end
+
+  def http_auth_username
+    ENV["HTTP_AUTH_USERNAME"]
+  end
+
+  def http_auth_password
+    ENV["HTTP_AUTH_PASSWORD"]
+  end
 end
