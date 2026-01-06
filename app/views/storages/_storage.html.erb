@@ -14,7 +14,12 @@
       </div>
     </div>
     <div class="flex shrink-0 items-center gap-x-4">
-      <div class="hidden sm:flex sm:flex-col sm:items-end">
+      <div class="hidden sm:flex sm:flex-col sm:items-end gap-1">
+        <% if storage.usage_type_source_only? %>
+          <span class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">Source only</span>
+        <% elsif storage.usage_type_destination_only? %>
+          <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">Destination only</span>
+        <% end %>
         <% if storage.in_use? %>
           <span class="inline-flex items-center gap-1 rounded-lg bg-green-100 px-2.5 py-1 text-sm font-medium text-green-700">
             <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">

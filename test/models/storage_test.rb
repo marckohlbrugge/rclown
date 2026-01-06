@@ -78,4 +78,69 @@ class StorageTest < ActiveSupport::TestCase
     )
     assert new_storage.valid?
   end
+
+  # Usage type tests
+  test "available_as_source? returns true when usage_type is nil" do
+    assert_nil @storage.usage_type
+    assert @storage.available_as_source?
+  end
+
+  test "available_as_source? returns true when usage_type is source_only" do
+    storage = storages(:source_only_storage)
+    assert storage.available_as_source?
+  end
+
+  test "available_as_source? returns false when usage_type is destination_only" do
+    storage = storages(:destination_only_storage)
+    assert_not storage.available_as_source?
+  end
+
+  test "available_as_destination? returns true when usage_type is nil" do
+    assert_nil @storage.usage_type
+    assert @storage.available_as_destination?
+  end
+
+  test "available_as_destination? returns true when usage_type is destination_only" do
+    storage = storages(:destination_only_storage)
+    assert storage.available_as_destination?
+  end
+
+  test "available_as_destination? returns false when usage_type is source_only" do
+    storage = storages(:source_only_storage)
+    assert_not storage.available_as_destination?
+  end
+
+  test "available_as_source scope includes nil and source_only" do
+    results = Storage.available_as_source
+    assert_includes results, @storage
+    assert_includes results, storages(:source_only_storage)
+    assert_not_includes results, storages(:destination_only_storage)
+  end
+
+  test "available_as_destination scope includes nil and destination_only" do
+    results = Storage.available_as_destination
+    assert_includes results, @storage
+    assert_includes results, storages(:destination_only_storage)
+    assert_not_includes results, storages(:source_only_storage)
+  end
+
+  test "cannot change to destination_only when used as source in backup" do
+    storage = storages(:source_bucket)
+    storage.usage_type = :destination_only
+    assert_not storage.valid?
+    assert storage.errors[:usage_type].any? { |e| e.include?("used as a source") }
+  end
+
+  test "cannot change to source_only when used as destination in backup" do
+    storage = storages(:destination_bucket)
+    storage.usage_type = :source_only
+    assert_not storage.valid?
+    assert storage.errors[:usage_type].any? { |e| e.include?("used as a destination") }
+  end
+
+  test "can change usage_type when storage is not used in any backup" do
+    storage = storages(:source_only_storage)
+    storage.usage_type = :destination_only
+    assert storage.valid?
+  end
 end

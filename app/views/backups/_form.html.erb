@@ -12,13 +12,13 @@
 
   <div>
     <%= form.label :source_storage_id, "Source Storage", class: "block text-sm font-semibold text-gray-700 mb-2" %>
-    <%= form.collection_select :source_storage_id, Storage.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select source storage" }, { autofocus: true } %>
+    <%= form.collection_select :source_storage_id, Storage.available_as_source.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select source storage" }, { autofocus: true } %>
     <p class="mt-2 text-sm text-gray-500">The storage location to back up from.</p>
   </div>
 
   <div>
     <%= form.label :destination_storage_id, "Destination Storage", class: "block text-sm font-semibold text-gray-700 mb-2" %>
-    <%= form.collection_select :destination_storage_id, Storage.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select destination storage" }, {} %>
+    <%= form.collection_select :destination_storage_id, Storage.available_as_destination.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select destination storage" }, {} %>
     <p class="mt-2 text-sm text-gray-500">The storage location to back up to.</p>
   </div>
 

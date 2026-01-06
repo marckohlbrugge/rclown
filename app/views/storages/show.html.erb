@@ -41,6 +41,18 @@
           <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 font-mono"><%= @storage.full_path %></dd>
         </div>
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-900">Usage Restriction</dt>
+          <dd class="mt-1 text-sm sm:col-span-2 sm:mt-0">
+            <% if @storage.usage_type.nil? %>
+              <span class="text-gray-500">None (can be used as source or destination)</span>
+            <% elsif @storage.usage_type_source_only? %>
+              <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">Source only</span>
+            <% elsif @storage.usage_type_destination_only? %>
+              <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Destination only</span>
+            <% end %>
+          </dd>
+        </div>
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-900">Created</dt>
           <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0"><%= @storage.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
         </div>

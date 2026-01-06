@@ -95,4 +95,52 @@ class BackupTest < ActiveSupport::TestCase
     assert_not_nil last
     assert last.completed?
   end
+
+  # Storage usage type compatibility tests
+  test "rejects destination-only storage as source" do
+    backup = Backup.new(
+      source_storage: storages(:destination_only_storage),
+      destination_storage: storages(:source_bucket),
+      schedule: :daily
+    )
+    assert_not backup.valid?
+    assert_includes backup.errors[:source_storage], "is restricted to destination-only usage"
+  end
+
+  test "rejects source-only storage as destination" do
+    backup = Backup.new(
+      source_storage: storages(:destination_bucket),
+      destination_storage: storages(:source_only_storage),
+      schedule: :daily
+    )
+    assert_not backup.valid?
+    assert_includes backup.errors[:destination_storage], "is restricted to source-only usage"
+  end
+
+  test "accepts source-only storage as source" do
+    backup = Backup.new(
+      source_storage: storages(:source_only_storage),
+      destination_storage: storages(:destination_only_storage),
+      schedule: :daily
+    )
+    assert backup.valid?
+  end
+
+  test "accepts destination-only storage as destination" do
+    backup = Backup.new(
+      source_storage: storages(:source_bucket),
+      destination_storage: storages(:destination_only_storage),
+      schedule: :daily
+    )
+    assert backup.valid?
+  end
+
+  test "accepts storage with no usage restriction as source or destination" do
+    backup = Backup.new(
+      source_storage: storages(:source_bucket),
+      destination_storage: storages(:destination_bucket),
+      schedule: :daily
+    )
+    assert backup.valid?
+  end
 end

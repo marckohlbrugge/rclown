@@ -11,3 +11,15 @@ with_prefix:
   bucket_name: "shared-bucket"
   prefix: "backups/daily"
   display_name: "Daily Backups"
+
+source_only_storage:
+  provider: cloudflare
+  bucket_name: "production-bucket"
+  usage_type: source_only
+  display_name: "Production Data"
+
+destination_only_storage:
+  provider: backblaze
+  bucket_name: "archive-bucket"
+  usage_type: destination_only
+  display_name: "Archive Storage"
