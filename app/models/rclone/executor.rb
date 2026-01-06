@@ -59,7 +59,7 @@ class Rclone::Executor
 
       cmd = [
         "rclone",
-        backup_run.dry_run? ? "sync" : "sync",
+        "copy",
         source_path,
         dest_path,
         "--config", config_file.path,
