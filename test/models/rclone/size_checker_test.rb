@@ -89,6 +89,46 @@ class Rclone::SizeCheckerTest < ActiveSupport::TestCase
     end
   end
 
+  test "includes exclude flags when excludes provided" do
+    json_output = '{"count": 1, "bytes": 100}'
+    mock_status = MockStatus.new(true)
+    captured_command = nil
+
+    capture_stub = lambda do |*command|
+      captured_command = command
+      [ json_output, "", mock_status ]
+    end
+
+    Open3.stub :capture3, capture_stub do
+      checker = Rclone::SizeChecker.new(@config_file, rclone_path: @rclone_path, excludes: ".deleted/**")
+      checker.check
+
+      assert_includes captured_command, "--exclude"
+      assert_includes captured_command, ".deleted/**"
+    end
+  end
+
+  test "includes multiple exclude flags for array of excludes" do
+    json_output = '{"count": 1, "bytes": 100}'
+    mock_status = MockStatus.new(true)
+    captured_command = nil
+
+    capture_stub = lambda do |*command|
+      captured_command = command
+      [ json_output, "", mock_status ]
+    end
+
+    Open3.stub :capture3, capture_stub do
+      checker = Rclone::SizeChecker.new(@config_file, rclone_path: @rclone_path, excludes: [ ".deleted/**", ".tmp/**" ])
+      checker.check
+
+      exclude_indices = captured_command.each_index.select { |i| captured_command[i] == "--exclude" }
+      assert_equal 2, exclude_indices.size
+      assert_includes captured_command, ".deleted/**"
+      assert_includes captured_command, ".tmp/**"
+    end
+  end
+
   private
     MockStatus = Struct.new(:success) do
       def success?

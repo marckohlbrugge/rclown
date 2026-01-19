@@ -4,6 +4,7 @@ daily_backup:
   destination_storage: destination_bucket
   schedule: daily
   enabled: true
+  retention_days: 30
 
 weekly_backup:
   name: "Weekly Backup"
@@ -12,6 +13,7 @@ weekly_backup:
   destination_path: "backups/weekly"
   schedule: weekly
   enabled: true
+  retention_days: 60
 
 disabled_backup:
   name: "Disabled Backup"
@@ -20,3 +22,4 @@ disabled_backup:
   destination_path: "backups/daily"
   schedule: daily
   enabled: false
+  retention_days: 30

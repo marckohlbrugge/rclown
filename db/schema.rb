@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_19_044117) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_19_060000) do
   create_table "backup_runs", force: :cascade do |t|
     t.integer "backup_id", null: false
     t.datetime "created_at", null: false
@@ -35,6 +35,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_044117) do
     t.boolean "enabled", default: true, null: false
     t.datetime "last_run_at"
     t.string "name", null: false
+    t.integer "retention_days", default: 30, null: false
     t.string "schedule", default: "daily", null: false
     t.string "source_path"
     t.integer "source_storage_id", null: false

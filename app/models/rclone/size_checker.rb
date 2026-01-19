@@ -2,13 +2,14 @@ require "open3"
 require "timeout"
 
 class Rclone::SizeChecker
-  attr_reader :config_file, :rclone_path
+  attr_reader :config_file, :rclone_path, :excludes
 
   TIMEOUT = 5.minutes
 
-  def initialize(config_file, rclone_path:)
+  def initialize(config_file, rclone_path:, excludes: [])
     @config_file = config_file
     @rclone_path = rclone_path
+    @excludes = Array(excludes)
   end
 
   def check
@@ -29,12 +30,18 @@ class Rclone::SizeChecker
 
   private
     def build_command
-      [
+      cmd = [
         "rclone", "size",
         rclone_path,
         "--json",
         "--config", config_file.path
       ]
+
+      excludes.each do |pattern|
+        cmd += [ "--exclude", pattern ]
+      end
+
+      cmd
     end
 
     def parse_json(output)

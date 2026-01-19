@@ -25,6 +25,15 @@ class Backup < ApplicationRecord
     build_rclone_path(destination_storage.bucket_name, destination_path, remote_name)
   end
 
+  def deleted_rclone_path(remote_name = "destination")
+    # Place .deleted at bucket root with backup ID to:
+    # 1. Avoid overlap with destination (rclone requirement)
+    # 2. Isolate deleted files per backup (different retention periods)
+    parts = [ ".deleted", "backup-#{id}" ]
+    parts << destination_path if destination_path.present?
+    build_rclone_path(destination_storage.bucket_name, parts.join("/"), remote_name)
+  end
+
   # Full paths for display
   def source_full_path
     source_path.present? ? "#{source_storage.bucket_name}/#{source_path}" : source_storage.bucket_name

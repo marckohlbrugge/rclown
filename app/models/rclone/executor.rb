@@ -70,7 +70,7 @@ class Rclone::Executor
         return result
       end
 
-      dest_size = Rclone::SizeChecker.new(@config_file, rclone_path: backup.destination_rclone_path("destination")).check
+      dest_size = Rclone::SizeChecker.new(@config_file, rclone_path: backup.destination_rclone_path("destination"), excludes: ".deleted/**").check
       if dest_size
         backup_run.append_log("[VERIFY] Destination: #{dest_size[:count]} objects, #{format_bytes(dest_size[:bytes])}\n")
       else
@@ -102,12 +102,15 @@ class Rclone::Executor
     def build_command(config_file)
       source_path = backup.source_rclone_path("source")
       dest_path = backup.destination_rclone_path("destination")
+      deleted_path = backup.deleted_rclone_path("destination")
 
       cmd = [
         "rclone",
-        "copy",
+        "sync",
         source_path,
         dest_path,
+        "--backup-dir", deleted_path,
+        "--suffix", "-#{Date.current.iso8601}",
         "--config", config_file.path,
         "--stats", "30s",
         "--stats-one-line",

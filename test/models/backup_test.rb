@@ -180,4 +180,30 @@ class BackupTest < ActiveSupport::TestCase
     @backup.destination_path = "backups/daily"
     assert_equal "my-backup-bucket/backups/daily", @backup.destination_full_path
   end
+
+  # Deleted path tests (for --backup-dir)
+  test "deleted_rclone_path without destination_path" do
+    assert_equal "dest:my-backup-bucket/.deleted/backup-#{@backup.id}", @backup.deleted_rclone_path("dest")
+  end
+
+  test "deleted_rclone_path with destination_path" do
+    @backup.destination_path = "backups/daily"
+    assert_equal "dest:my-backup-bucket/.deleted/backup-#{@backup.id}/backups/daily", @backup.deleted_rclone_path("dest")
+  end
+
+  # Retention days tests
+  test "retention_days defaults to 30" do
+    backup = Backup.new(
+      source_storage: storages(:source_bucket),
+      destination_storage: storages(:destination_bucket),
+      schedule: :daily
+    )
+    assert_equal 30, backup.retention_days
+  end
+
+  test "retention_days can be set to custom value" do
+    @backup.retention_days = 90
+    assert @backup.valid?
+    assert_equal 90, @backup.retention_days
+  end
 end
