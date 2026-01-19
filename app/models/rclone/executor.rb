@@ -68,6 +68,7 @@ class Rclone::Executor
       source_size = Rclone::SizeChecker.new(@config_file, rclone_path: backup.source_rclone_path("source")).check
       if source_size
         backup_run.append_log("[VERIFY] Source: #{source_size[:count]} objects, #{format_bytes(source_size[:bytes])}\n")
+        backup_run.update!(source_count: source_size[:count], source_bytes: source_size[:bytes])
       else
         backup_run.append_log("[VERIFY] Source: failed to get size\n")
         return result

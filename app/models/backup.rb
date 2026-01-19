@@ -52,6 +52,25 @@ class Backup < ApplicationRecord
     destination_path.present? ? "#{destination_storage.bucket_name}/#{destination_path}" : destination_storage.bucket_name
   end
 
+  def latest_size
+    runs.where.not(source_bytes: nil).order(created_at: :desc).pick(:source_bytes)
+  end
+
+  def formatted_size
+    bytes = latest_size
+    return nil unless bytes
+
+    if bytes >= 1_000_000_000
+      format("%.2f GB", bytes / 1_000_000_000.0)
+    elsif bytes >= 1_000_000
+      format("%.2f MB", bytes / 1_000_000.0)
+    elsif bytes >= 1_000
+      format("%.2f KB", bytes / 1_000.0)
+    else
+      "#{bytes} B"
+    end
+  end
+
   private
     def build_rclone_path(bucket_name, path, remote_name)
       path.present? ? "#{remote_name}:#{bucket_name}/#{path}" : "#{remote_name}:#{bucket_name}"
