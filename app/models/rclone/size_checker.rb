@@ -4,7 +4,7 @@ require "timeout"
 class Rclone::SizeChecker
   attr_reader :config_file, :rclone_path, :excludes
 
-  TIMEOUT = 5.minutes
+  TIMEOUT = 30.minutes
 
   def initialize(config_file, rclone_path:, excludes: [])
     @config_file = config_file
