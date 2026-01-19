@@ -6,6 +6,10 @@ class Backup < ApplicationRecord
 
   has_many :runs, class_name: "BackupRun", dependent: :destroy
 
+  def runs_by_day(days: 30)
+    runs.where(dry_run: false, created_at: days.days.ago..).group_by { |r| r.created_at.to_date }
+  end
+
   validate :source_and_destination_differ
   validate :source_storage_allows_source_usage
   validate :destination_storage_allows_destination_usage

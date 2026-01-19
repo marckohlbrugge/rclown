@@ -1,10 +1,6 @@
-<%
-  runs_by_day = backup.runs.where(created_at: 30.days.ago..).group_by { |r| r.created_at.to_date }
-  today = Date.current
-  days = (0..29).map { |i| today - i.days }.reverse
-%>
+<% runs_by_day = backup.runs_by_day %>
 <div class="flex items-center gap-0.5 flex-1">
-  <% days.each do |day| %>
+  <% (29.days.ago.to_date..Date.current).each do |day| %>
     <%
       day_runs = runs_by_day[day] || []
       if day_runs.empty?
