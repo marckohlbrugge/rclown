@@ -183,12 +183,12 @@ class BackupTest < ActiveSupport::TestCase
 
   # Deleted path tests (for --backup-dir)
   test "deleted_rclone_path without destination_path" do
-    assert_equal "dest:my-backup-bucket/.deleted/backup-#{@backup.id}", @backup.deleted_rclone_path("dest")
+    assert_equal "dest:my-backup-bucket/.deleted/backups/#{@backup.id}", @backup.deleted_rclone_path("dest")
   end
 
   test "deleted_rclone_path with destination_path" do
     @backup.destination_path = "backups/daily"
-    assert_equal "dest:my-backup-bucket/.deleted/backup-#{@backup.id}/backups/daily", @backup.deleted_rclone_path("dest")
+    assert_equal "dest:my-backup-bucket/.deleted/backups/#{@backup.id}/backups/daily", @backup.deleted_rclone_path("dest")
   end
 
   # Retention days tests

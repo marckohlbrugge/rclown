@@ -82,12 +82,12 @@ class CleanupDeletedFilesJobTest < ActiveSupport::TestCase
 
     # Find the delete command for our daily_backup fixture
     delete_command = captured_commands.find do |cmd|
-      cmd[1] == "delete" && cmd[2].include?("backup-#{@backup.id}")
+      cmd[1] == "delete" && cmd[2].include?("backups/#{@backup.id}")
     end
     deleted_path = delete_command[2]
 
-    # .deleted includes backup ID: bucket/.deleted/backup-123
-    assert_match %r{/\.deleted/backup-#{@backup.id}}, deleted_path
+    # .deleted includes backup ID: bucket/.deleted/backups/123
+    assert_match %r{/\.deleted/backups/#{@backup.id}}, deleted_path
     assert_includes deleted_path, @backup.destination_storage.bucket_name
   end
 

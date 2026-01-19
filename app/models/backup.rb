@@ -29,7 +29,7 @@ class Backup < ApplicationRecord
     # Place .deleted at bucket root with backup ID to:
     # 1. Avoid overlap with destination (rclone requirement)
     # 2. Isolate deleted files per backup (different retention periods)
-    parts = [ ".deleted", "backup-#{id}" ]
+    parts = [ ".deleted", "backups", id.to_s ]
     parts << destination_path if destination_path.present?
     build_rclone_path(destination_storage.bucket_name, parts.join("/"), remote_name)
   end
