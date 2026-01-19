@@ -2,6 +2,8 @@ require "open3"
 require "timeout"
 
 class Rclone::Executor
+  class StorageUsageError < StandardError; end
+
   attr_reader :backup_run
 
   TIMEOUT = BackupRun::TIMEOUT
@@ -11,6 +13,7 @@ class Rclone::Executor
   end
 
   def run
+    validate_storage_usage!
     @config_file = generate_config
     result = execute_rclone(@config_file)
 
@@ -154,5 +157,18 @@ class Rclone::Executor
       config_file.unlink
     rescue => e
       Rails.logger.warn "Failed to cleanup rclone config: #{e.message}"
+    end
+
+    def validate_storage_usage!
+      source = backup.source_storage
+      destination = backup.destination_storage
+
+      unless source.available_as_source?
+        raise StorageUsageError, "Source storage '#{source.name}' is restricted to destination-only usage"
+      end
+
+      unless destination.available_as_destination?
+        raise StorageUsageError, "Destination storage '#{destination.name}' is restricted to source-only usage"
+      end
     end
 end

@@ -105,4 +105,35 @@ class BackupRunTest < ActiveSupport::TestCase
     @running_run.rclone_pid = 999999999
     assert_not @running_run.process_running?
   end
+
+  # Runtime storage usage validation tests
+  test "execute fails when source storage is destination-only" do
+    backup = backups(:daily_backup)
+    backup.source_storage.update_column(:usage_type, "destination_only")
+
+    run = BackupRun.create!(backup: backup)
+    run.execute
+
+    assert run.failed?
+    assert_includes run.raw_log, "Source storage"
+    assert_includes run.raw_log, "is restricted to destination-only usage"
+  ensure
+    run&.clear_log
+    run&.destroy
+  end
+
+  test "execute fails when destination storage is source-only" do
+    backup = backups(:daily_backup)
+    backup.destination_storage.update_column(:usage_type, "source_only")
+
+    run = BackupRun.create!(backup: backup)
+    run.execute
+
+    assert run.failed?
+    assert_includes run.raw_log, "Destination storage"
+    assert_includes run.raw_log, "is restricted to source-only usage"
+  ensure
+    run&.clear_log
+    run&.destroy
+  end
 end
