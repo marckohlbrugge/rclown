@@ -28,6 +28,7 @@ class BackupRun < ApplicationRecord
   def execute
     running!
     update!(started_at: Time.current)
+    clear_log
 
     result = Rclone::Executor.new(self).run
 
