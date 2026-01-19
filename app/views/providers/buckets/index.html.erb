@@ -12,24 +12,38 @@
       <p class="text-sm text-gray-500">No buckets found for this provider.</p>
     </div>
   <% else %>
-    <ul role="list" class="divide-y divide-gray-100">
-      <% @buckets.each do |bucket_name| %>
-        <li class="flex items-center justify-between gap-x-6 px-4 py-4 sm:px-6">
-          <div class="min-w-0">
-            <p class="text-base font-medium text-gray-900 font-mono"><%= bucket_name %></p>
-          </div>
-          <% if @provider.bucket_imported?(bucket_name) %>
-            <span class="inline-flex items-center gap-1 rounded-lg bg-green-100 px-2.5 py-1 text-sm font-medium text-green-700">
-              <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
-              </svg>
-              Imported
-            </span>
-          <% else %>
-            <%= button_to "Import", provider_buckets_path(@provider, bucket_name: bucket_name), method: :post, class: "rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-500", data: { turbo_frame: "_top" } %>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
+    <div data-controller="filter">
+      <div class="px-4 py-3 sm:px-6 border-b border-gray-100">
+        <input type="text"
+               data-filter-target="input"
+               data-action="input->filter#filter"
+               placeholder="Filter buckets…"
+               class="block w-full rounded-lg border-0 py-2 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm">
+      </div>
+      <ul role="list" class="divide-y divide-gray-100">
+        <% @buckets.each do |bucket_name| %>
+          <li class="flex items-center justify-between gap-x-6 px-4 py-4 sm:px-6"
+              data-filter-target="item"
+              data-filter-text="<%= bucket_name %>">
+            <div class="min-w-0">
+              <p class="text-base font-medium text-gray-900 font-mono"><%= bucket_name %></p>
+            </div>
+            <% if @provider.bucket_imported?(bucket_name) %>
+              <span class="inline-flex items-center gap-1 rounded-lg bg-green-100 px-2.5 py-1 text-sm font-medium text-green-700">
+                <svg class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                </svg>
+                Imported
+              </span>
+            <% else %>
+              <%= button_to "Import", provider_buckets_path(@provider, bucket_name: bucket_name), method: :post, class: "rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-500", data: { turbo_frame: "_top" } %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+      <div class="px-4 py-6 text-center hidden" data-filter-target="empty">
+        <p class="text-sm text-gray-500">No buckets match your filter.</p>
+      </div>
+    </div>
   <% end %>
 <% end %>

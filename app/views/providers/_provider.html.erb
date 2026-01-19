@@ -1,4 +1,4 @@
-<li id="<%= dom_id(provider) %>" class="first:rounded-t-2xl last:rounded-b-2xl">
+<li id="<%= dom_id(provider) %>" class="first:rounded-t-2xl last:rounded-b-2xl" data-filter-target="item" data-filter-text="<%= provider.name %> <%= provider.provider_type_name %>">
   <%= link_to provider, class: "flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 rounded-[inherit] sm:px-6" do %>
     <div class="flex min-w-0 gap-x-4">
       <div class="flex size-12 shrink-0 items-center justify-center rounded-xl border-2 border-gray-200 bg-white">

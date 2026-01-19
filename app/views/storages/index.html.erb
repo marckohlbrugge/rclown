@@ -4,11 +4,23 @@
 
 <div class="bg-white rounded-2xl border-2 border-gray-200">
   <% if @storages.any? %>
-    <ul role="list" class="divide-y divide-gray-100">
-      <% @storages.each do |storage| %>
-        <%= render "storage", storage: storage %>
-      <% end %>
-    </ul>
+    <div data-controller="filter">
+      <div class="px-4 py-3 sm:px-6 border-b border-gray-100">
+        <input type="text"
+               data-filter-target="input"
+               data-action="input->filter#filter"
+               placeholder="Filter storages…"
+               class="block w-full rounded-lg border-0 py-2 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm">
+      </div>
+      <ul role="list" class="divide-y divide-gray-100">
+        <% @storages.each do |storage| %>
+          <%= render "storage", storage: storage %>
+        <% end %>
+      </ul>
+      <div class="px-4 py-6 text-center hidden" data-filter-target="empty">
+        <p class="text-sm text-gray-500">No storages match your filter.</p>
+      </div>
+    </div>
   <% else %>
     <div class="px-4 py-12 text-center">
       <svg class="mx-auto size-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
