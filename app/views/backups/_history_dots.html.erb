@@ -20,6 +20,12 @@
         tooltip = "#{day_runs.size} runs"
       end
     %>
-    <div class="flex-1 h-5 rounded-sm <%= bar_class %>" title="<%= day.strftime('%b %d') %>: <%= tooltip %>"></div>
+    <div class="group relative flex-1 h-5 rounded-sm <%= bar_class %>">
+      <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+        <%= day.strftime('%a, %b %-d, %Y') %>
+        <div class="text-gray-400"><%= tooltip %></div>
+        <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+      </div>
+    </div>
   <% end %>
 </div>
