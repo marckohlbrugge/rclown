@@ -7,18 +7,25 @@
         </svg>
       </div>
       <div class="min-w-0 flex-auto">
-        <div class="flex items-center gap-x-2">
-          <span class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-2 py-1 text-sm">
-            <%= render "providers/icon", provider: backup.source_storage.provider, size_class: "size-4" %>
-            <span class="text-gray-700"><%= backup.source_storage.name %></span>
-          </span>
-          <svg class="size-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
-          </svg>
-          <span class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-2 py-1 text-sm">
-            <%= render "providers/icon", provider: backup.destination_storage.provider, size_class: "size-4" %>
-            <span class="text-gray-700"><%= backup.destination_storage.name %></span>
-          </span>
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-x-2">
+            <span class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-2 py-1 text-sm">
+              <%= render "providers/icon", provider: backup.source_storage.provider, size_class: "size-4" %>
+              <span class="text-gray-700"><%= backup.source_storage.name %></span>
+            </span>
+            <svg class="size-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+            </svg>
+            <span class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-2 py-1 text-sm">
+              <%= render "providers/icon", provider: backup.destination_storage.provider, size_class: "size-4" %>
+              <span class="text-gray-700"><%= backup.destination_storage.name %></span>
+            </span>
+          </div>
+          <% if backup.source_path.present? || backup.destination_path.present? %>
+            <div class="font-mono text-xs text-gray-500">
+              <%= backup.source_full_path %> → <%= backup.destination_full_path %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

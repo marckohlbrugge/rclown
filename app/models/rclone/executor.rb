@@ -62,7 +62,7 @@ class Rclone::Executor
     def verify_backup(result)
       backup_run.append_log("\n")
 
-      source_size = Rclone::SizeChecker.new(backup.source_storage, @config_file, remote_name: "source").check
+      source_size = Rclone::SizeChecker.new(@config_file, rclone_path: backup.source_rclone_path("source")).check
       if source_size
         backup_run.append_log("[VERIFY] Source: #{source_size[:count]} objects, #{format_bytes(source_size[:bytes])}\n")
       else
@@ -70,7 +70,7 @@ class Rclone::Executor
         return result
       end
 
-      dest_size = Rclone::SizeChecker.new(backup.destination_storage, @config_file, remote_name: "destination").check
+      dest_size = Rclone::SizeChecker.new(@config_file, rclone_path: backup.destination_rclone_path("destination")).check
       if dest_size
         backup_run.append_log("[VERIFY] Destination: #{dest_size[:count]} objects, #{format_bytes(dest_size[:bytes])}\n")
       else
@@ -100,8 +100,8 @@ class Rclone::Executor
     end
 
     def build_command(config_file)
-      source_path = backup.source_storage.rclone_path("source")
-      dest_path = backup.destination_storage.rclone_path("destination")
+      source_path = backup.source_rclone_path("source")
+      dest_path = backup.destination_rclone_path("destination")
 
       cmd = [
         "rclone",

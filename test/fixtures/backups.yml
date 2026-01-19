@@ -8,13 +8,15 @@ daily_backup:
 weekly_backup:
   name: "Weekly Backup"
   source_storage: source_bucket
-  destination_storage: with_prefix
+  destination_storage: shared_bucket
+  destination_path: "backups/weekly"
   schedule: weekly
   enabled: true
 
 disabled_backup:
   name: "Disabled Backup"
   source_storage: destination_bucket
-  destination_storage: with_prefix
+  destination_storage: shared_bucket
+  destination_path: "backups/daily"
   schedule: daily
   enabled: false

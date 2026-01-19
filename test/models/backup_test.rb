@@ -143,4 +143,41 @@ class BackupTest < ActiveSupport::TestCase
     )
     assert backup.valid?
   end
+
+  # Path method tests
+  test "source_rclone_path without path" do
+    assert_equal "source:my-source-bucket", @backup.source_rclone_path("source")
+  end
+
+  test "source_rclone_path with path" do
+    @backup.source_path = "data/exports"
+    assert_equal "source:my-source-bucket/data/exports", @backup.source_rclone_path("source")
+  end
+
+  test "destination_rclone_path without path" do
+    assert_equal "dest:my-backup-bucket", @backup.destination_rclone_path("dest")
+  end
+
+  test "destination_rclone_path with path" do
+    @backup.destination_path = "backups/daily"
+    assert_equal "dest:my-backup-bucket/backups/daily", @backup.destination_rclone_path("dest")
+  end
+
+  test "source_full_path without path" do
+    assert_equal "my-source-bucket", @backup.source_full_path
+  end
+
+  test "source_full_path with path" do
+    @backup.source_path = "data/exports"
+    assert_equal "my-source-bucket/data/exports", @backup.source_full_path
+  end
+
+  test "destination_full_path without path" do
+    assert_equal "my-backup-bucket", @backup.destination_full_path
+  end
+
+  test "destination_full_path with path" do
+    @backup.destination_path = "backups/daily"
+    assert_equal "my-backup-bucket/backups/daily", @backup.destination_full_path
+  end
 end

@@ -3,10 +3,10 @@ require "minitest/mock"
 
 class Rclone::SizeCheckerTest < ActiveSupport::TestCase
   setup do
-    @storage = storages(:source_bucket)
     @config_file = Tempfile.new([ "rclone", ".conf" ])
     @config_file.write("[remote]\ntype = s3\n")
     @config_file.flush
+    @rclone_path = "source:my-source-bucket"
   end
 
   teardown do
@@ -19,7 +19,7 @@ class Rclone::SizeCheckerTest < ActiveSupport::TestCase
     mock_status = MockStatus.new(true)
 
     Open3.stub :capture3, [ json_output, "", mock_status ] do
-      checker = Rclone::SizeChecker.new(@storage, @config_file)
+      checker = Rclone::SizeChecker.new(@config_file, rclone_path: @rclone_path)
       result = checker.check
 
       assert_equal 123, result[:count]
@@ -31,7 +31,7 @@ class Rclone::SizeCheckerTest < ActiveSupport::TestCase
     mock_status = MockStatus.new(false)
 
     Open3.stub :capture3, [ "", "error message", mock_status ] do
-      checker = Rclone::SizeChecker.new(@storage, @config_file)
+      checker = Rclone::SizeChecker.new(@config_file, rclone_path: @rclone_path)
       result = checker.check
 
       assert_nil result
@@ -42,14 +42,14 @@ class Rclone::SizeCheckerTest < ActiveSupport::TestCase
     mock_status = MockStatus.new(true)
 
     Open3.stub :capture3, [ "not valid json", "", mock_status ] do
-      checker = Rclone::SizeChecker.new(@storage, @config_file)
+      checker = Rclone::SizeChecker.new(@config_file, rclone_path: @rclone_path)
       result = checker.check
 
       assert_nil result
     end
   end
 
-  test "uses correct remote name in command" do
+  test "uses provided rclone path in command" do
     json_output = '{"count": 1, "bytes": 100}'
     mock_status = MockStatus.new(true)
     captured_command = nil
@@ -60,10 +60,10 @@ class Rclone::SizeCheckerTest < ActiveSupport::TestCase
     end
 
     Open3.stub :capture3, capture_stub do
-      checker = Rclone::SizeChecker.new(@storage, @config_file, remote_name: "source")
+      checker = Rclone::SizeChecker.new(@config_file, rclone_path: "source:my-bucket/path")
       checker.check
 
-      assert_includes captured_command, "source:my-source-bucket"
+      assert_includes captured_command, "source:my-bucket/path"
     end
   end
 
@@ -78,7 +78,7 @@ class Rclone::SizeCheckerTest < ActiveSupport::TestCase
     end
 
     Open3.stub :capture3, capture_stub do
-      checker = Rclone::SizeChecker.new(@storage, @config_file)
+      checker = Rclone::SizeChecker.new(@config_file, rclone_path: @rclone_path)
       checker.check
 
       assert_equal "rclone", captured_command[0]

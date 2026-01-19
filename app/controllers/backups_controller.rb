@@ -46,6 +46,6 @@ class BackupsController < ApplicationController
     end
 
     def backup_params
-      params.require(:backup).permit(:name, :source_storage_id, :destination_storage_id, :schedule, :enabled)
+      params.require(:backup).permit(:name, :source_storage_id, :destination_storage_id, :source_path, :destination_path, :schedule, :enabled)
     end
 end

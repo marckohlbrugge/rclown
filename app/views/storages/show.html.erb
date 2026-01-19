@@ -24,22 +24,12 @@
           <dt class="text-sm font-medium text-gray-900">Bucket</dt>
           <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 font-mono"><%= @storage.bucket_name %></dd>
         </div>
-        <% if @storage.prefix.present? %>
-          <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt class="text-sm font-medium text-gray-900">Prefix</dt>
-            <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 font-mono"><%= @storage.prefix %></dd>
-          </div>
-        <% end %>
         <% if @storage.display_name.present? %>
           <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-900">Display Name</dt>
             <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0"><%= @storage.display_name %></dd>
           </div>
         <% end %>
-        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-900">Full Path</dt>
-          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 font-mono"><%= @storage.full_path %></dd>
-        </div>
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-900">Usage Restriction</dt>
           <dd class="mt-1 text-sm sm:col-span-2 sm:mt-0">

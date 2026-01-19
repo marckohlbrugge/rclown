@@ -2,14 +2,13 @@ require "open3"
 require "timeout"
 
 class Rclone::SizeChecker
-  attr_reader :storage, :config_file, :remote_name
+  attr_reader :config_file, :rclone_path
 
   TIMEOUT = 5.minutes
 
-  def initialize(storage, config_file, remote_name: "remote")
-    @storage = storage
+  def initialize(config_file, rclone_path:)
     @config_file = config_file
-    @remote_name = remote_name
+    @rclone_path = rclone_path
   end
 
   def check
@@ -32,7 +31,7 @@ class Rclone::SizeChecker
     def build_command
       [
         "rclone", "size",
-        storage.rclone_path(remote_name),
+        rclone_path,
         "--json",
         "--config", config_file.path
       ]

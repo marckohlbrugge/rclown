@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_06_153037) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_19_041324) do
   create_table "backup_runs", force: :cascade do |t|
     t.integer "backup_id", null: false
     t.datetime "created_at", null: false
@@ -28,11 +28,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_06_153037) do
 
   create_table "backups", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "destination_path"
     t.integer "destination_storage_id", null: false
     t.boolean "enabled", default: true, null: false
     t.datetime "last_run_at"
     t.string "name", null: false
     t.string "schedule", default: "daily", null: false
+    t.string "source_path"
     t.integer "source_storage_id", null: false
     t.datetime "updated_at", null: false
     t.index ["destination_storage_id"], name: "index_backups_on_destination_storage_id"
@@ -54,11 +56,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_06_153037) do
     t.string "bucket_name", null: false
     t.datetime "created_at", null: false
     t.string "display_name"
-    t.string "prefix"
     t.integer "provider_id", null: false
     t.datetime "updated_at", null: false
     t.integer "usage_type"
-    t.index ["provider_id", "bucket_name", "prefix"], name: "index_storages_on_provider_id_and_bucket_name_and_prefix", unique: true
+    t.index ["provider_id", "bucket_name"], name: "index_storages_on_provider_id_and_bucket_name", unique: true
     t.index ["provider_id"], name: "index_storages_on_provider_id"
   end
 

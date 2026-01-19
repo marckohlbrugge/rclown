@@ -19,18 +19,14 @@ class Storage < ApplicationRecord
   def available_as_destination?
     usage_type.nil? || usage_type_destination_only?
   end
-  validates :bucket_name, uniqueness: { scope: [ :provider_id, :prefix ], message: "with this prefix already exists for this provider" }
+  validates :bucket_name, uniqueness: { scope: :provider_id, message: "already exists for this provider" }
 
   def name
     display_name.presence || bucket_name
   end
 
-  def full_path
-    prefix.present? ? "#{bucket_name}/#{prefix}" : bucket_name
-  end
-
   def rclone_path(remote_name = "remote")
-    prefix.present? ? "#{remote_name}:#{bucket_name}/#{prefix}" : "#{remote_name}:#{bucket_name}"
+    "#{remote_name}:#{bucket_name}"
   end
 
   def backups

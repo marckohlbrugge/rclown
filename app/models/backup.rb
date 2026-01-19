@@ -16,7 +16,29 @@ class Backup < ApplicationRecord
 
   before_validation :generate_name, if: -> { name.blank? && source_storage && destination_storage }
 
+  # Path methods for rclone commands
+  def source_rclone_path(remote_name = "source")
+    build_rclone_path(source_storage.bucket_name, source_path, remote_name)
+  end
+
+  def destination_rclone_path(remote_name = "destination")
+    build_rclone_path(destination_storage.bucket_name, destination_path, remote_name)
+  end
+
+  # Full paths for display
+  def source_full_path
+    source_path.present? ? "#{source_storage.bucket_name}/#{source_path}" : source_storage.bucket_name
+  end
+
+  def destination_full_path
+    destination_path.present? ? "#{destination_storage.bucket_name}/#{destination_path}" : destination_storage.bucket_name
+  end
+
   private
+    def build_rclone_path(bucket_name, path, remote_name)
+      path.present? ? "#{remote_name}:#{bucket_name}/#{path}" : "#{remote_name}:#{bucket_name}"
+    end
+
     def generate_name
       self.name = "#{source_storage.name} → #{destination_storage.name}"
     end

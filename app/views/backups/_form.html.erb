@@ -11,9 +11,16 @@
   <% end %>
 
   <div class="flex items-start gap-4">
-    <div class="flex-1">
-      <%= form.label :source_storage_id, "Source", class: "block text-sm font-semibold text-gray-700 mb-2" %>
-      <%= form.collection_select :source_storage_id, Storage.available_as_source.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select source" }, { autofocus: true } %>
+    <div class="flex-1 space-y-4">
+      <div>
+        <%= form.label :source_storage_id, "Source", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+        <%= form.collection_select :source_storage_id, Storage.available_as_source.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select source" }, { autofocus: true } %>
+      </div>
+      <div>
+        <%= form.label :source_path, "Source Path", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+        <%= form.text_field :source_path, class: "font-mono", placeholder: "path/within/bucket" %>
+        <p class="mt-1 text-xs text-gray-500">Optional path within the bucket</p>
+      </div>
     </div>
 
     <div class="flex items-center pt-7 text-gray-400">
@@ -22,9 +29,16 @@
       </svg>
     </div>
 
-    <div class="flex-1">
-      <%= form.label :destination_storage_id, "Destination", class: "block text-sm font-semibold text-gray-700 mb-2" %>
-      <%= form.collection_select :destination_storage_id, Storage.available_as_destination.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select destination" }, {} %>
+    <div class="flex-1 space-y-4">
+      <div>
+        <%= form.label :destination_storage_id, "Destination", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+        <%= form.collection_select :destination_storage_id, Storage.available_as_destination.includes(:provider).order(:bucket_name), :id, ->(s) { "#{s.name} (#{s.provider.name})" }, { include_blank: "Select destination" }, {} %>
+      </div>
+      <div>
+        <%= form.label :destination_path, "Destination Path", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+        <%= form.text_field :destination_path, class: "font-mono", placeholder: "path/within/bucket" %>
+        <p class="mt-1 text-xs text-gray-500">Optional path within the bucket</p>
+      </div>
     </div>
   </div>
 

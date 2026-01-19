@@ -6,10 +6,9 @@ destination_bucket:
   provider: backblaze
   bucket_name: "my-backup-bucket"
 
-with_prefix:
+shared_bucket:
   provider: amazon
   bucket_name: "shared-bucket"
-  prefix: "backups/daily"
   display_name: "Daily Backups"
 
 source_only_storage:

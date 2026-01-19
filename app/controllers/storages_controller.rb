@@ -49,6 +49,6 @@ class StoragesController < ApplicationController
     end
 
     def storage_params
-      params.require(:storage).permit(:provider_id, :bucket_name, :prefix, :display_name, :usage_type)
+      params.require(:storage).permit(:provider_id, :bucket_name, :display_name, :usage_type)
     end
 end

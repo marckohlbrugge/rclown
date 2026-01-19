@@ -36,6 +36,7 @@
               <span class="font-medium text-gray-900"><%= @backup.source_storage.name %></span>
               <span class="text-sm text-gray-500"><%= @backup.source_storage.provider.name %></span>
             <% end %>
+            <span class="ml-2 font-mono text-sm text-gray-500"><%= @backup.source_full_path %></span>
           </dd>
         </div>
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -46,6 +47,7 @@
               <span class="font-medium text-gray-900"><%= @backup.destination_storage.name %></span>
               <span class="text-sm text-gray-500"><%= @backup.destination_storage.provider.name %></span>
             <% end %>
+            <span class="ml-2 font-mono text-sm text-gray-500"><%= @backup.destination_full_path %></span>
           </dd>
         </div>
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

@@ -22,7 +22,7 @@ class StorageTest < ActiveSupport::TestCase
   end
 
   test "name returns display_name when present" do
-    storage = storages(:with_prefix)
+    storage = storages(:shared_bucket)
     assert_equal "Daily Backups", storage.name
   end
 
@@ -30,45 +30,21 @@ class StorageTest < ActiveSupport::TestCase
     assert_equal "my-source-bucket", @storage.name
   end
 
-  test "full_path without prefix" do
-    assert_equal "my-source-bucket", @storage.full_path
-  end
-
-  test "full_path with prefix" do
-    storage = storages(:with_prefix)
-    assert_equal "shared-bucket/backups/daily", storage.full_path
-  end
-
-  test "rclone_path without prefix" do
+  test "rclone_path returns bucket path" do
     assert_equal "remote:my-source-bucket", @storage.rclone_path
-  end
-
-  test "rclone_path with prefix" do
-    storage = storages(:with_prefix)
-    assert_equal "remote:shared-bucket/backups/daily", storage.rclone_path
   end
 
   test "rclone_path with custom remote name" do
     assert_equal "source:my-source-bucket", @storage.rclone_path("source")
   end
 
-  test "uniqueness of bucket_name and prefix per provider" do
+  test "uniqueness of bucket_name per provider" do
     duplicate = Storage.new(
       provider: @storage.provider,
-      bucket_name: @storage.bucket_name,
-      prefix: @storage.prefix
+      bucket_name: @storage.bucket_name
     )
     assert_not duplicate.valid?
-    assert_includes duplicate.errors[:bucket_name], "with this prefix already exists for this provider"
-  end
-
-  test "allows same bucket_name with different prefix" do
-    new_storage = Storage.new(
-      provider: @storage.provider,
-      bucket_name: @storage.bucket_name,
-      prefix: "different-prefix"
-    )
-    assert new_storage.valid?
+    assert_includes duplicate.errors[:bucket_name], "already exists for this provider"
   end
 
   test "allows same bucket_name on different provider" do
