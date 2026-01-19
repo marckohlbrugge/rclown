@@ -1,0 +1,28 @@
+<li class="flex items-center justify-between gap-x-6 px-4 py-4 sm:px-6 hover:bg-gray-50">
+  <div class="min-w-0 flex-1">
+    <div class="flex items-center gap-x-3">
+      <%= render "notifiers/icon", notifier: notifier %>
+      <div>
+        <p class="text-sm font-semibold text-gray-900"><%= notifier.name %></p>
+        <p class="text-xs text-gray-500"><%= notifier.type_name %></p>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center gap-x-4">
+    <% if notifier.enabled? %>
+      <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+        Enabled
+      </span>
+    <% else %>
+      <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+        Disabled
+      </span>
+    <% end %>
+    <% if notifier.last_notified_at %>
+      <span class="text-xs text-gray-500" title="Last notification sent">
+        <%= time_ago_in_words(notifier.last_notified_at) %> ago
+      </span>
+    <% end %>
+    <%= link_to "View", notifier, class: "text-sm font-medium text-blue-600 hover:text-blue-500" %>
+  </div>
+</li>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_19_104818) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_19_112120) do
   create_table "backup_runs", force: :cascade do |t|
     t.integer "backup_id", null: false
     t.datetime "created_at", null: false
@@ -45,6 +45,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_104818) do
     t.datetime "updated_at", null: false
     t.index ["destination_storage_id"], name: "index_backups_on_destination_storage_id"
     t.index ["source_storage_id"], name: "index_backups_on_source_storage_id"
+  end
+
+  create_table "notifiers", force: :cascade do |t|
+    t.text "config"
+    t.datetime "created_at", null: false
+    t.boolean "enabled", default: true
+    t.string "last_error"
+    t.datetime "last_failed_at"
+    t.datetime "last_notified_at"
+    t.string "name", null: false
+    t.string "type", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "providers", force: :cascade do |t|

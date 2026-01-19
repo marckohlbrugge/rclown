@@ -14,6 +14,12 @@ Rails.application.routes.draw do
 
   resources :storages
 
+  resources :notifiers do
+    scope module: :notifiers do
+      resource :test, only: :create
+    end
+  end
+
   resources :backups do
     scope module: :backups do
       resource :execution, only: :create
