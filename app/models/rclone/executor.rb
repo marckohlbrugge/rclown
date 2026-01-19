@@ -11,10 +11,16 @@ class Rclone::Executor
   end
 
   def run
-    config_file = generate_config
-    execute_rclone(config_file)
+    @config_file = generate_config
+    result = execute_rclone(@config_file)
+
+    if result[:success] && !backup_run.dry_run?
+      result = verify_backup(result)
+    end
+
+    result
   ensure
-    cleanup_config(config_file)
+    cleanup_config(@config_file)
   end
 
   private
@@ -53,6 +59,46 @@ class Rclone::Executor
       { success: false, exit_code: -2 }
     end
 
+    def verify_backup(result)
+      backup_run.append_log("\n")
+
+      source_size = Rclone::SizeChecker.new(backup.source_storage, @config_file, remote_name: "source").check
+      if source_size
+        backup_run.append_log("[VERIFY] Source: #{source_size[:count]} objects, #{format_bytes(source_size[:bytes])}\n")
+      else
+        backup_run.append_log("[VERIFY] Source: failed to get size\n")
+        return result
+      end
+
+      dest_size = Rclone::SizeChecker.new(backup.destination_storage, @config_file, remote_name: "destination").check
+      if dest_size
+        backup_run.append_log("[VERIFY] Destination: #{dest_size[:count]} objects, #{format_bytes(dest_size[:bytes])}\n")
+      else
+        backup_run.append_log("[VERIFY] Destination: failed to get size\n")
+        return result
+      end
+
+      if source_size[:count] == dest_size[:count] && source_size[:bytes] == dest_size[:bytes]
+        backup_run.append_log("[VERIFY] OK - counts and sizes match\n")
+        result
+      else
+        backup_run.append_log("[VERIFY] MISMATCH - source and destination differ\n")
+        { success: false, exit_code: result[:exit_code] }
+      end
+    end
+
+    def format_bytes(bytes)
+      if bytes >= 1_000_000_000
+        format("%.1f GB", bytes / 1_000_000_000.0)
+      elsif bytes >= 1_000_000
+        format("%.1f MB", bytes / 1_000_000.0)
+      elsif bytes >= 1_000
+        format("%.1f KB", bytes / 1_000.0)
+      else
+        "#{bytes} B"
+      end
+    end
+
     def build_command(config_file)
       source_path = backup.source_storage.rclone_path("source")
       dest_path = backup.destination_storage.rclone_path("destination")
@@ -69,9 +115,21 @@ class Rclone::Executor
         "--disable", "ServerSideAcrossConfigs"
       ]
 
+      cmd += upload_cutoff_flags
       cmd << "--dry-run" if backup_run.dry_run?
 
       cmd
+    end
+
+    def upload_cutoff_flags
+      case backup.destination_storage.provider.provider_type
+      when "cloudflare_r2", "amazon_s3"
+        [ "--s3-upload-cutoff", "0" ]
+      when "backblaze_b2"
+        [ "--b2-upload-cutoff", "0" ]
+      else
+        []
+      end
     end
 
     def kill_process
