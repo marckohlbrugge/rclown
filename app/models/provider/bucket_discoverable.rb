@@ -18,10 +18,9 @@ module Provider::BucketDiscoverable
     storages.exists?(bucket_name: bucket_name)
   end
 
-  def import_bucket(bucket_name, prefix: nil, display_name: nil)
+  def import_bucket(bucket_name, display_name: nil)
     storages.create!(
       bucket_name: bucket_name,
-      prefix: prefix,
       display_name: display_name
     )
   end
