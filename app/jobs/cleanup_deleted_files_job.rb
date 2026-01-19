@@ -12,7 +12,7 @@ class CleanupDeletedFilesJob < ApplicationJob
   private
     def cleanup_deleted_files(backup)
       config_file = generate_config(backup)
-      deleted_path = backup.deleted_rclone_path("destination")
+      deleted_path = backup.deleted_rclone_base_path("destination")
 
       delete_old_files(config_file, deleted_path, backup.retention_days)
       remove_empty_dirs(config_file, deleted_path)

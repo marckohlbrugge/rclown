@@ -9,6 +9,9 @@ Rclown wraps the battle-tested [rclone](https://rclone.org/) in a simple interfa
 - **Multi-provider support**: Cloudflare R2, Backblaze B2, Amazon S3
 - **Bucket discovery**: Automatically find and import buckets from your providers
 - **Scheduled backups**: Daily or weekly, with dry-run support
+- **Flexible paths**: Back up entire buckets or specific sub-paths
+- **Retention policies**: Deleted files kept for configurable period before cleanup
+- **Comparison modes**: Size-only, checksum, or default (size + mtime) comparison
 - **Live logs**: Stream backup progress in real-time
 - **Failure notifications**: Email alerts when backups fail
 - **System health**: Monitor CPU, memory, disk usage, and queue status

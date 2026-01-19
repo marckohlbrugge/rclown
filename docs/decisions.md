@@ -68,6 +68,21 @@ This document captures implementation decisions made for rclown v1.
 - No cron expressions in v1
 - Solid Queue handles scheduling
 
+### Retention
+
+- Uses rclone's `--backup-dir` flag
+- Deleted/overwritten files moved to `.deleted/backups/{backup_id}/{date}/`
+- Date folders (not filename suffixes) for cleaner organization
+- Configurable `retention_days` per backup (default: 30)
+- `CleanupDeletedFilesJob` runs `rclone delete --min-age` to purge old files
+
+### Comparison Mode
+
+- Configurable per backup: `default`, `size_only`, `checksum`
+- `default`: size + modification time (rclone standard)
+- `size_only`: compare by size only (useful for migrations)
+- `checksum`: compare by hash (thorough but slower)
+
 ---
 
 ## Dependencies

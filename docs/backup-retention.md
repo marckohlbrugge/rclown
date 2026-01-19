@@ -1,5 +1,7 @@
 # Backup Retention Strategy
 
+> **Status: Implemented** - We chose Option 1 (`--backup-dir`) with date folders.
+
 ## Problem
 
 A simple `rclone copy` or `rclone sync` doesn't handle deleted files well for backup purposes:
@@ -10,157 +12,63 @@ A simple `rclone copy` or `rclone sync` doesn't handle deleted files well for ba
 For proper backups, we want:
 1. New files added immediately
 2. Deleted files retained for a configurable period (e.g., 30 days) before removal
-3. (Future) Modified files could keep previous versions
 
-## Option 1: rclone `--backup-dir`
+## Implemented Solution: `--backup-dir` with Date Folders
 
-rclone's `--backup-dir` flag moves deleted/overwritten files to a separate directory instead of deleting them.
+We use rclone's `--backup-dir` flag to move deleted/overwritten files to a separate directory organized by date.
 
 ### How it works
 
 ```bash
-rclone sync source: dest: --backup-dir dest:.deleted --suffix -2026-01-06
+rclone sync source:bucket dest:bucket/path \
+  --backup-dir dest:bucket/.deleted/backups/{backup_id}/{date}/path
 ```
 
 - New files → copied to destination immediately
-- Deleted files → moved to `dest:.deleted/original/path/file.txt-2026-01-06`
-- Original path structure preserved in `.deleted/`
+- Deleted files → moved to `.deleted/backups/{backup_id}/{date}/{path}/{filename}`
+- Each backup has its own `.deleted` subdirectory (isolated retention periods)
+- Date folders (not filename suffixes) for cleaner organization and browsing
+
+### Directory Structure
+
+```
+bucket/
+├── r2/
+│   └── my-app/           # actual backup data
+│       └── uploads/
+│           └── photo.jpg
+└── .deleted/
+    └── backups/
+        └── 5/            # backup ID
+            ├── 2026-01-15/
+            │   └── r2/my-app/uploads/
+            │       └── old-photo.jpg
+            └── 2026-01-19/
+                └── r2/my-app/uploads/
+                    └── deleted-file.jpg
+```
 
 ### Cleanup
 
-A scheduled job deletes old files from `.deleted/`:
+`CleanupDeletedFilesJob` runs periodically to purge old files:
 
 ```bash
-rclone delete dest:.deleted --min-age 30d
-rclone rmdirs dest:.deleted --leave-root  # remove empty directories
+rclone delete dest:.deleted/backups/{id}/ --min-age {retention_days}d
+rclone rmdirs dest:.deleted/backups/{id}/ --leave-root
 ```
 
-### Implementation
+The `--min-age` flag uses actual file metadata (upload time), not folder names, so cleanup works correctly regardless of directory structure.
 
-```ruby
-# In Rclone::Executor#build_command
-cmd = [
-  "rclone",
-  "sync",
-  source_path,
-  dest_path,
-  "--backup-dir", "#{dest_path}/.deleted",
-  "--suffix", "-#{Date.current.iso8601}",
-  "--config", config_file.path,
-  ...
-]
-```
+### Configuration
 
-```ruby
-# New job: CleanupDeletedFilesJob
-class CleanupDeletedFilesJob < ApplicationJob
-  def perform(backup)
-    # rclone delete dest:.deleted --min-age #{backup.retention_days}d
-    # rclone rmdirs dest:.deleted --leave-root
-  end
-end
-```
+- `retention_days` per backup (default: 30)
+- Cleanup job handles all enabled backups
 
-### Schema changes
+## Why Date Folders over Filename Suffixes
 
-```ruby
-# Add to backups table
-add_column :backups, :retention_days, :integer, default: 30
-```
+Initially we used `--suffix -2026-01-19` which appends dates to filenames. We switched to date folders because:
 
-### Pros
-- Full control within the app
-- Visibility into what's pending deletion
-- Can expose `.deleted/` contents in UI for manual restore
-- Works with any storage provider
-
-### Cons
-- More complex than simple copy/sync
-- Requires separate cleanup job
-- Suffix-based dating means one "version" per day max
-
----
-
-## Option 2: Bucket-level versioning
-
-S3, B2, and R2 all support object versioning at the storage level.
-
-### How it works
-
-1. Enable versioning on the bucket (one-time setup)
-2. Use `rclone sync` normally
-3. When files are deleted, storage creates a "delete marker" but retains the data
-4. Lifecycle rules auto-expire old versions after N days
-
-### Setup examples
-
-**Cloudflare R2:**
-```bash
-# Via Cloudflare dashboard or API
-# Enable versioning on bucket, set lifecycle rule
-```
-
-**Backblaze B2:**
-```bash
-b2 update-bucket --lifecycle-rules '[{
-  "daysFromHidingToDeleting": 30,
-  "fileNamePrefix": ""
-}]' bucketName
-```
-
-**Amazon S3:**
-```bash
-aws s3api put-bucket-versioning --bucket bucketName --versioning-configuration Status=Enabled
-aws s3api put-bucket-lifecycle-configuration --bucket bucketName --lifecycle-configuration '{
-  "Rules": [{
-    "ID": "DeleteOldVersions",
-    "Status": "Enabled",
-    "NoncurrentVersionExpiration": { "NoncurrentDays": 30 }
-  }]
-}'
-```
-
-### Pros
-- Zero rclone complexity
-- Storage provider handles retention automatically
-- Multiple versions per day possible
-- Restore through provider's interface
-- Battle-tested infrastructure
-
-### Cons
-- Configuration lives outside the app
-- Less visibility (can't easily show pending deletions in UI)
-- Slightly different setup per provider
-- May have cost implications (storing versions)
-
----
-
-## Comparison
-
-| Aspect | `--backup-dir` | Bucket versioning |
-|--------|----------------|-------------------|
-| Setup complexity | Medium (code changes) | Low (one-time bucket config) |
-| Ongoing maintenance | Cleanup job needed | None |
-| Control | Full | Limited |
-| UI integration | Easy | Harder |
-| Multi-version per day | No (date suffix) | Yes |
-| Provider support | Universal | Most providers |
-| Cost | Storage for .deleted | Storage for versions |
-
----
-
-## Recommendation
-
-For a backup dashboard that wants to provide visibility and control, **Option 1 (`--backup-dir`)** is more suitable:
-
-1. Keeps everything within the app's control
-2. Can show users what's pending deletion
-3. Allows manual restore from UI
-4. Consistent behavior across all providers
-
-However, **Option 2 (bucket versioning)** is simpler if:
-1. Users are comfortable configuring their buckets
-2. Less UI control is acceptable
-3. You want to minimize code complexity
-
-A hybrid approach is also possible: document bucket versioning as "recommended setup" while using `rclone copy` (additive) in the app, letting the bucket handle retention.
+1. **Cleaner browsing** - Can browse by date in any S3 UI
+2. **Easier bulk operations** - Delete entire date folder vs filtering by suffix
+3. **No filename pollution** - Original filenames preserved
+4. **Simpler mental model** - "Files deleted on Jan 19" vs "files ending in -2026-01-19"

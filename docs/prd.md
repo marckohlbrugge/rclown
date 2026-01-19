@@ -35,7 +35,6 @@ A self-hosted alternative to cloud backup services for **bucket-to-bucket backup
 * Multi-tenant / user accounts
 * SaaS integrations (GitHub, Notion, etc.)
 * Restore UI
-* Retention policies / version cleanup
 * Server-side copy
 * Custom per-backup rclone flags
 * Snapshot/archival backups (only mirror-style backups)
@@ -94,21 +93,22 @@ Represents credentials and configuration for a storage provider.
 
 ### 5.2 Storage
 
-Represents a concrete location to back up from or to.
+Represents a bucket under a provider.
 
 **Fields**
 
 * `id`
 * `provider_id`
 * `bucket_name`
-* `prefix` (string, optional; e.g. subfolder inside a bucket)
 * `display_name` (optional, derived if empty)
+* `usage_type` (enum: `source_only`, `destination_only`, or null for any)
 * `created_at`, `updated_at`
 
 **Notes**
 
 * Storages do **not** store credentials
 * Only storages explicitly imported/created are persisted
+* Paths within buckets are configured on Backups, not Storages
 
 ---
 
@@ -122,15 +122,19 @@ Defines a backup configuration.
 * `name`
 * `source_storage_id`
 * `destination_storage_id`
+* `source_path` (string, optional; path within source bucket)
+* `destination_path` (string, optional; path within destination bucket)
 * `schedule` (enum: `daily`, `weekly`)
 * `enabled` (boolean)
+* `retention_days` (integer, default: 30)
+* `comparison_mode` (enum: `default`, `size_only`, `checksum`)
 * `last_run_at`
 * `created_at`, `updated_at`
 
 **Constraints**
 
 * Source and destination must be different
-* Backups use rclone `sync` mode
+* Backups use rclone `sync` mode with `--backup-dir` for retention
 
 ---
 

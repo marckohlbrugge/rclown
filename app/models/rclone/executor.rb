@@ -113,7 +113,6 @@ class Rclone::Executor
         source_path,
         dest_path,
         "--backup-dir", deleted_path,
-        "--suffix", "-#{Date.current.iso8601}",
         "--config", config_file.path,
         "--stats", "30s",
         "--stats-one-line",
