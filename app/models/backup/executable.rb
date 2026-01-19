@@ -4,7 +4,11 @@ module Backup::Executable
   def execute(dry_run: false)
     return nil if running? && !dry_run
 
-    runs.create!(dry_run: dry_run).tap do |run|
+    runs.create!(
+      dry_run: dry_run,
+      source_rclone_path: source_rclone_path,
+      destination_rclone_path: destination_rclone_path
+    ).tap do |run|
       run.execute_later
     end
   end

@@ -64,6 +64,14 @@
             <%= link_to "#{@backup.source_storage.name} → #{@backup.destination_storage.name}", @backup, class: "text-blue-600 hover:text-blue-500" %>
           </dd>
         </div>
+        <% if @run.source_rclone_path.present? || @run.destination_rclone_path.present? %>
+          <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-900">Paths</dt>
+            <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 font-mono">
+              <%= @run.source_rclone_path %> → <%= @run.destination_rclone_path %>
+            </dd>
+          </div>
+        <% end %>
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-900">Started</dt>
           <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">

@@ -10,14 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_19_041324) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_19_044117) do
   create_table "backup_runs", force: :cascade do |t|
     t.integer "backup_id", null: false
     t.datetime "created_at", null: false
+    t.string "destination_rclone_path"
     t.boolean "dry_run", default: false, null: false
     t.integer "exit_code"
     t.datetime "finished_at"
     t.integer "rclone_pid"
+    t.string "source_rclone_path"
     t.datetime "started_at"
     t.string "status", default: "pending", null: false
     t.datetime "updated_at", null: false
