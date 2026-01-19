@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_19_060000) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_19_072237) do
   create_table "backup_runs", force: :cascade do |t|
     t.integer "backup_id", null: false
     t.datetime "created_at", null: false
@@ -29,6 +29,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_060000) do
   end
 
   create_table "backups", force: :cascade do |t|
+    t.integer "comparison_mode", default: 0, null: false
     t.datetime "created_at", null: false
     t.string "destination_path"
     t.integer "destination_storage_id", null: false

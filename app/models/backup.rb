@@ -1,6 +1,8 @@
 class Backup < ApplicationRecord
   include Executable, Schedulable, Enableable, Cancellable
 
+  enum :comparison_mode, { default: 0, size_only: 1, checksum: 2 }
+
   belongs_to :source_storage, class_name: "Storage"
   belongs_to :destination_storage, class_name: "Storage"
 

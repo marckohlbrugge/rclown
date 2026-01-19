@@ -122,9 +122,21 @@ class Rclone::Executor
       ]
 
       cmd += upload_cutoff_flags
+      cmd += comparison_mode_flags
       cmd << "--dry-run" if backup_run.dry_run?
 
       cmd
+    end
+
+    def comparison_mode_flags
+      case backup.comparison_mode
+      when "size_only"
+        [ "--size-only" ]
+      when "checksum"
+        [ "--checksum" ]
+      else
+        []
+      end
     end
 
     def upload_cutoff_flags

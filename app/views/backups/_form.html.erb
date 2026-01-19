@@ -56,6 +56,21 @@
     </div>
   </div>
 
+  <div>
+    <%= form.label :comparison_mode, "Comparison Mode", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <div class="flex gap-3">
+      <% { default: "Default", size_only: "Size Only", checksum: "Checksum" }.each do |mode, label| %>
+        <div class="flex-1">
+          <%= form.radio_button :comparison_mode, mode, class: "sr-only peer" %>
+          <%= form.label :comparison_mode, value: mode, class: "flex items-center justify-center px-4 py-3 border-2 rounded-xl cursor-pointer transition-colors border-gray-200 hover:border-gray-300 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:hover:border-blue-400" do %>
+            <span class="text-sm font-medium text-gray-700"><%= label %></span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <p class="mt-2 text-xs text-gray-500">Default: size + modification time. Size Only: compare sizes only (good for migration). Checksum: compare by hash (thorough but slower).</p>
+  </div>
+
   <div class="flex items-center gap-x-3">
     <%= form.check_box :enabled, class: "size-5 rounded-lg border-2 border-gray-300 text-blue-600 focus:ring-blue-500" %>
     <%= form.label :enabled, "Enabled", class: "text-sm font-semibold text-gray-700" %>
