@@ -25,6 +25,41 @@
     </div>
   </div>
 
+  <%# Next Scheduled Runs %>
+  <% if @upcoming_backups.any? %>
+    <div class="bg-white rounded-2xl border-2 border-gray-200">
+      <div class="px-4 py-6 sm:px-6">
+        <h3 class="text-base font-semibold text-gray-900">Next Scheduled Runs</h3>
+      </div>
+      <div class="border-t border-gray-200">
+        <ul role="list" class="divide-y divide-gray-100">
+          <% @upcoming_backups.each do |backup| %>
+            <li>
+              <%= link_to backup, class: "flex items-center justify-between gap-x-6 px-4 py-4 hover:bg-gray-50 sm:px-6" do %>
+                <div class="min-w-0 flex-1">
+                  <p class="text-base font-medium text-gray-900">
+                    <%= backup.source_storage.name %> → <%= backup.destination_storage.name %>
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    <%= backup.schedule.capitalize %> backup
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm font-medium text-gray-900">
+                    <%= backup.next_run_at.strftime("%b %d, %I:%M %p") %>
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    <%= time_ago_in_words(backup.next_run_at) %> from now
+                  </p>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
     <%# Recent Backups %>
     <div class="bg-white rounded-2xl border-2 border-gray-200">
