@@ -8,8 +8,9 @@ module Notifiers
       parsed_config["webhook_url"]
     end
 
-    def deliver(backup_run)
-      post_message(failure_message(backup_run))
+    def deliver(backup_run, event_type = :failure)
+      message = event_type.to_sym == :success ? success_message(backup_run) : failure_message(backup_run)
+      post_message(message)
     end
 
     def test_delivery
@@ -80,6 +81,45 @@ module Notifiers
               {
                 type: "mrkdwn",
                 text: "*Exit Code:*\n#{backup_run.exit_code || 'N/A'}"
+              }
+            ]
+          }
+        ]
+      }
+    end
+
+    def success_message(backup_run)
+      backup = backup_run.backup
+
+      {
+        text: "Backup Successful: #{backup.name}",
+        blocks: [
+          {
+            type: "header",
+            text: {
+              type: "plain_text",
+              text: "Backup Successful",
+              emoji: true
+            }
+          },
+          {
+            type: "section",
+            fields: [
+              {
+                type: "mrkdwn",
+                text: "*Backup:*\n#{backup.name}"
+              },
+              {
+                type: "mrkdwn",
+                text: "*Status:*\nSuccess"
+              },
+              {
+                type: "mrkdwn",
+                text: "*Duration:*\n#{backup_run.formatted_duration || 'N/A'}"
+              },
+              {
+                type: "mrkdwn",
+                text: "*Size:*\n#{backup.formatted_size || 'N/A'}"
               }
             ]
           }

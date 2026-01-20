@@ -6,9 +6,14 @@ module Notifiers
       parsed_config["recipients"] || []
     end
 
-    def deliver(backup_run)
+    def deliver(backup_run, event_type = :failure)
       recipients.each do |recipient|
-        BackupMailer.failure(backup_run, recipient: recipient).deliver_now
+        case event_type.to_sym
+        when :success
+          BackupMailer.success(backup_run, recipient: recipient).deliver_now
+        else
+          BackupMailer.failure(backup_run, recipient: recipient).deliver_now
+        end
       end
     end
 

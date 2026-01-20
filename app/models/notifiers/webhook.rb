@@ -16,8 +16,9 @@ module Notifiers
       parsed_config["include_logs"] == true
     end
 
-    def deliver(backup_run)
-      post_payload(failure_payload(backup_run))
+    def deliver(backup_run, event_type = :failure)
+      payload = event_type.to_sym == :success ? success_payload(backup_run) : failure_payload(backup_run)
+      post_payload(payload)
     end
 
     def test_delivery
@@ -95,6 +96,28 @@ module Notifiers
       end
 
       payload
+    end
+
+    def success_payload(backup_run)
+      backup = backup_run.backup
+
+      {
+        event: "backup.success",
+        timestamp: Time.current.iso8601,
+        backup: {
+          id: backup.id,
+          name: backup.name
+        },
+        run: {
+          id: backup_run.id,
+          status: backup_run.status,
+          started_at: backup_run.started_at&.iso8601,
+          finished_at: backup_run.finished_at&.iso8601,
+          duration_seconds: backup_run.duration&.round,
+          source_bytes: backup_run.source_bytes,
+          source_count: backup_run.source_count
+        }
+      }
     end
 
     def test_payload

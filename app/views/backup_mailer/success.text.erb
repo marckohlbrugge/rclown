@@ -1,0 +1,16 @@
+BACKUP SUCCESSFUL: <%= @backup.name %>
+================================================================================
+
+The following backup completed successfully:
+
+Backup: <%= @backup.name %>
+Source: <%= @backup.source_storage.name %> (<%= @backup.source_storage.provider.name %>)
+Destination: <%= @backup.destination_storage.name %> (<%= @backup.destination_storage.provider.name %>)
+Started: <%= @backup_run.started_at&.strftime("%B %d, %Y at %I:%M %p") %>
+Duration: <%= @backup_run.formatted_duration %>
+<% if @backup_run.source_bytes %>
+Size: <%= @backup.formatted_size %>
+<% end %>
+
+--------------------------------------------------------------------------------
+This email was sent by Rclown backup monitoring.
