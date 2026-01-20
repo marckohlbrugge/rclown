@@ -68,4 +68,6 @@ group :test do
   gem "selenium-webdriver"
   # Pin minitest for Rails 8.1 compatibility
   gem "minitest", "~> 5.25"
+  # Mock HTTP requests
+  gem "webmock"
 end

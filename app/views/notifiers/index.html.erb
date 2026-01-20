@@ -1,0 +1,29 @@
+<% page_header "Notifiers" do %>
+  <%= link_to "New Notifier", new_notifier_path, class: "inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500" %>
+<% end %>
+
+<div class="bg-white rounded-2xl border-2 border-gray-200">
+  <% if @notifiers.any? %>
+    <ul role="list" class="divide-y divide-gray-100">
+      <% @notifiers.each do |notifier| %>
+        <%= render "notifier", notifier: notifier %>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="px-4 py-12 text-center">
+      <svg class="mx-auto size-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+      </svg>
+      <h3 class="mt-2 text-sm font-semibold text-gray-900">No notifiers</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by creating a new notification channel.</p>
+      <div class="mt-6">
+        <%= link_to new_notifier_path, class: "inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500" do %>
+          <svg class="-ml-0.5 mr-1.5 size-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+          </svg>
+          New Notifier
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

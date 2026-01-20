@@ -1,0 +1,104 @@
+<%= form_with model: notifier, class: "space-y-6", data: { controller: "conditional-fields" } do |form| %>
+  <% if notifier.errors.any? %>
+    <div class="rounded-xl border-2 border-red-200 bg-red-50 p-4">
+      <h3 class="font-medium text-red-800"><%= pluralize(notifier.errors.count, "error") %> prohibited this notifier from being saved:</h3>
+      <ul class="mt-2 list-disc list-inside text-red-700">
+        <% notifier.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <%= form.text_field :name, placeholder: "My Email Notifier", autofocus: true %>
+  </div>
+
+  <% unless notifier.persisted? %>
+    <div>
+      <%= form.label :type, "Notifier Type", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <div class="grid grid-cols-3 gap-3">
+        <% Notifier::NOTIFIER_TYPES.each do |type, name| %>
+          <div>
+            <%= form.radio_button :type, type, class: "sr-only peer", data: { action: "change->conditional-fields#toggle", conditional_fields_target: "radio" } %>
+            <%= form.label :type, value: type, class: "relative flex flex-col items-center gap-2 p-4 border-2 rounded-xl cursor-pointer transition-colors border-gray-200 hover:border-gray-300 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:hover:border-blue-400" do %>
+              <%= render "notifiers/icon", notifier_type: type, size_class: "size-8" %>
+              <span class="text-sm font-medium text-gray-700"><%= name %></span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <%= form.hidden_field :type, value: notifier.type %>
+  <% end %>
+
+  <%# Email-specific fields %>
+  <div data-conditional-fields-target="fields" data-value="Notifiers::Email" class="<%= 'hidden' unless notifier.is_a?(Notifiers::Email) %>">
+    <div>
+      <%= form.label :recipients, "Recipients", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <%= form.text_area :recipients,
+          value: notifier.is_a?(Notifiers::Email) ? notifier.recipients.join(", ") : "",
+          placeholder: "admin@example.com, ops@example.com",
+          rows: 2,
+          class: "font-mono" %>
+      <p class="mt-2 text-sm text-gray-500">Comma or space-separated email addresses.</p>
+    </div>
+  </div>
+
+  <%# Slack-specific fields %>
+  <div data-conditional-fields-target="fields" data-value="Notifiers::Slack" class="<%= 'hidden' unless notifier.is_a?(Notifiers::Slack) %>">
+    <div>
+      <%= form.label :webhook_url, "Webhook URL", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <%= form.text_field :webhook_url,
+          value: notifier.is_a?(Notifiers::Slack) ? notifier.webhook_url : "",
+          placeholder: "https://hooks.slack.com/services/...",
+          class: "font-mono" %>
+      <p class="mt-2 text-sm text-gray-500">Create an incoming webhook in your Slack workspace settings.</p>
+    </div>
+  </div>
+
+  <%# Webhook-specific fields %>
+  <div data-conditional-fields-target="fields" data-value="Notifiers::Webhook" class="<%= 'hidden' unless notifier.is_a?(Notifiers::Webhook) %>">
+    <div class="space-y-4">
+      <div>
+        <%= form.label :url, "Webhook URL", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+        <%= form.text_field :url,
+            value: notifier.is_a?(Notifiers::Webhook) ? notifier.url : "",
+            placeholder: "https://api.example.com/webhooks/backup",
+            class: "font-mono" %>
+      </div>
+
+      <div>
+        <%= form.label :headers, "Headers", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+        <% headers_string = notifier.is_a?(Notifiers::Webhook) ? notifier.headers.map { |k, v| "#{k}: #{v}" }.join("\n") : "" %>
+        <%= form.text_area :headers,
+            value: headers_string,
+            placeholder: "Authorization: Bearer token\nX-Custom-Header: value",
+            rows: 3,
+            class: "font-mono" %>
+        <p class="mt-2 text-sm text-gray-500">One header per line, format: "Header-Name: value"</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <%= form.check_box :include_logs,
+            checked: notifier.is_a?(Notifiers::Webhook) && notifier.include_logs?,
+            class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+        <%= form.label :include_logs, "Include log preview in payload", class: "text-sm text-gray-700" %>
+      </div>
+    </div>
+  </div>
+
+  <% if notifier.persisted? %>
+    <div class="flex items-center gap-2">
+      <%= form.check_box :enabled, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+      <%= form.label :enabled, "Enable notifications", class: "text-sm text-gray-700" %>
+    </div>
+  <% end %>
+
+  <div class="flex items-center justify-end gap-x-4 border-t border-gray-200 pt-6">
+    <%= link_to "Cancel", notifier.persisted? ? notifier : notifiers_path, class: "px-4 py-3 text-sm font-semibold text-gray-600 hover:text-gray-900" %>
+    <%= form.submit notifier.persisted? ? "Update Notifier" : "Create Notifier", class: "rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-500 cursor-pointer" %>
+  </div>
+<% end %>

@@ -1,0 +1,30 @@
+email_notifier:
+  type: Notifiers::Email
+  name: Email Alerts
+  enabled: true
+  config: '{"recipients":["admin@example.com","ops@example.com"]}'
+  last_notified_at: <%= 1.day.ago %>
+
+disabled_email_notifier:
+  type: Notifiers::Email
+  name: Disabled Email
+  enabled: false
+  config: '{"recipients":["disabled@example.com"]}'
+
+slack_notifier:
+  type: Notifiers::Slack
+  name: Slack Alerts
+  enabled: true
+  config: '{"webhook_url":"https://hooks.slack.com/services/T00/B00/XXX"}'
+
+webhook_notifier:
+  type: Notifiers::Webhook
+  name: Custom Webhook
+  enabled: true
+  config: '{"url":"https://api.example.com/webhooks/backup","headers":{"Authorization":"Bearer token"},"include_logs":true}'
+
+webhook_notifier_no_logs:
+  type: Notifiers::Webhook
+  name: Webhook No Logs
+  enabled: true
+  config: '{"url":"https://api.example.com/webhooks/simple","headers":{},"include_logs":false}'
