@@ -19,7 +19,7 @@ class NotifiersController < ApplicationController
     @notifier = Notifier.build(params[:notifier])
 
     if @notifier.save
-      redirect_to @notifier, notice: "Notifier was successfully created."
+      redirect_to notifier_path(@notifier), notice: "Notifier was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -30,7 +30,7 @@ class NotifiersController < ApplicationController
     @notifier.config = @notifier.class.config_from_params(params[:notifier])
 
     if @notifier.save
-      redirect_to @notifier, notice: "Notifier was successfully updated."
+      redirect_to notifier_path(@notifier), notice: "Notifier was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
