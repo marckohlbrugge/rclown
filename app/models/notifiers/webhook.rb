@@ -1,3 +1,5 @@
+require "net/http"
+
 module Notifiers
   class Webhook < Notifier
     validate :validate_url

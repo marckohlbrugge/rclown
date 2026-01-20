@@ -1,3 +1,5 @@
+require "net/http"
+
 module Notifiers
   class Slack < Notifier
     validate :validate_webhook_url
