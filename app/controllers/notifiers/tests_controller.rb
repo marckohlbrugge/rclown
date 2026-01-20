@@ -12,8 +12,9 @@ module Notifiers
     end
 
     private
-      def set_notifier
-        @notifier = Notifier.find(params[:notifier_id])
-      end
+
+    def set_notifier
+      @notifier = Notifier.find(params[:notifier_id])
+    end
   end
 end
