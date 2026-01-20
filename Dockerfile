@@ -59,10 +59,11 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 # Final stage for app image
 FROM base
 
-# Install rclone for backup operations
-RUN curl -O https://downloads.rclone.org/rclone-current-linux-amd64.deb && \
-    dpkg -i rclone-current-linux-amd64.deb && \
-    rm rclone-current-linux-amd64.deb
+# Install rclone for backup operations (architecture-aware)
+RUN ARCH=$(dpkg --print-architecture) && \
+    curl -O https://downloads.rclone.org/rclone-current-linux-${ARCH}.deb && \
+    dpkg -i rclone-current-linux-${ARCH}.deb && \
+    rm rclone-current-linux-${ARCH}.deb
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
