@@ -4,6 +4,11 @@ class DashboardController < ApplicationController
     @recent_runs = BackupRun.includes(backup: [ :source_storage, :destination_storage ])
                             .order(created_at: :desc)
                             .limit(10)
+    @upcoming_backups = Backup.enabled
+                              .includes(:source_storage, :destination_storage)
+                              .select { |b| b.next_run_at.present? }
+                              .sort_by(&:next_run_at)
+                              .first(5)
     @stats = {
       total_backups: Backup.count,
       enabled_backups: Backup.enabled.count,
