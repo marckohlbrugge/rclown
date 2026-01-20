@@ -2,10 +2,6 @@ module Notifiers
   class Slack < Notifier
     validate :validate_webhook_url
 
-    def self.config_from_params(params)
-      { webhook_url: params[:webhook_url] }.to_json
-    end
-
     def webhook_url
       parsed_config["webhook_url"]
     end
@@ -16,6 +12,10 @@ module Notifiers
 
     def test_delivery
       post_message(test_message)
+    end
+
+    def self.config_from_params(params)
+      { webhook_url: params[:webhook_url] }.to_json
     end
 
     private

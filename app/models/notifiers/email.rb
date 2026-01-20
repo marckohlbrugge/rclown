@@ -2,11 +2,6 @@ module Notifiers
   class Email < Notifier
     validate :validate_recipients
 
-    def self.config_from_params(params)
-      recipients = params[:recipients].to_s.split(/[,\s]+/).map(&:strip).reject(&:blank?)
-      { recipients: recipients }.to_json
-    end
-
     def recipients
       parsed_config["recipients"] || []
     end
@@ -21,6 +16,11 @@ module Notifiers
       recipients.each do |recipient|
         BackupMailer.test_notification(recipient: recipient).deliver_now
       end
+    end
+
+    def self.config_from_params(params)
+      recipients = params[:recipients].to_s.split(/[,\s]+/).map(&:strip).reject(&:blank?)
+      { recipients: recipients }.to_json
     end
 
     private

@@ -12,6 +12,25 @@ class Notifier < ApplicationRecord
 
   scope :enabled, -> { where(enabled: true) }
 
+  def type_name
+    NOTIFIER_TYPES[type]
+  end
+
+  def parsed_config
+    return {} if config.blank?
+    JSON.parse(config)
+  rescue JSON::ParserError
+    {}
+  end
+
+  def deliver(backup_run)
+    raise NotImplementedError, "Subclasses must implement #deliver"
+  end
+
+  def test_delivery
+    raise NotImplementedError, "Subclasses must implement #test_delivery"
+  end
+
   def self.build(params)
     type = params[:type]
     klass = type.safe_constantize if NOTIFIER_TYPES.key?(type)
@@ -30,24 +49,5 @@ class Notifier < ApplicationRecord
     enabled.find_each do |notifier|
       NotifierDeliveryJob.perform_later(notifier, backup_run)
     end
-  end
-
-  def type_name
-    NOTIFIER_TYPES[type]
-  end
-
-  def parsed_config
-    return {} if config.blank?
-    JSON.parse(config)
-  rescue JSON::ParserError
-    {}
-  end
-
-  def deliver(backup_run)
-    raise NotImplementedError, "Subclasses must implement #deliver"
-  end
-
-  def test_delivery
-    raise NotImplementedError, "Subclasses must implement #test_delivery"
   end
 end
