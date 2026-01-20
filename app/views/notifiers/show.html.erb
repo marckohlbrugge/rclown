@@ -1,6 +1,6 @@
 <% page_header @notifier.name do %>
   <%= link_to "Edit", edit_notifier_path(@notifier), class: "inline-flex items-center rounded-xl border-2 border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50" %>
-  <%= button_to "Delete", @notifier, method: :delete, class: "ml-3 inline-flex items-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-500", data: { turbo_confirm: "Are you sure you want to delete this notifier?" } %>
+  <%= button_to "Delete", notifier_path(@notifier), method: :delete, class: "ml-3 inline-flex items-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-500", data: { turbo_confirm: "Are you sure you want to delete this notifier?" } %>
 <% end %>
 
 <div class="space-y-6">

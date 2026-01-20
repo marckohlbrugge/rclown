@@ -23,6 +23,6 @@
         <%= time_ago_in_words(notifier.last_notified_at) %> ago
       </span>
     <% end %>
-    <%= link_to "View", notifier, class: "text-sm font-medium text-blue-600 hover:text-blue-500" %>
+    <%= link_to "View", notifier_path(notifier), class: "text-sm font-medium text-blue-600 hover:text-blue-500" %>
   </div>
 </li>
