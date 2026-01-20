@@ -90,6 +90,27 @@
     </div>
   </div>
 
+  <%# Notification Events %>
+  <div>
+    <label class="block text-sm font-semibold text-gray-700 mb-3">Notify On</label>
+    <div class="space-y-3">
+      <div class="flex items-center gap-2">
+        <%= form.check_box :notify_on_failure, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+        <%= form.label :notify_on_failure, class: "text-sm text-gray-700" do %>
+          <span class="font-medium">Backup Failed</span>
+          <span class="text-gray-500">— when a backup encounters an error</span>
+        <% end %>
+      </div>
+      <div class="flex items-center gap-2">
+        <%= form.check_box :notify_on_success, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+        <%= form.label :notify_on_success, class: "text-sm text-gray-700" do %>
+          <span class="font-medium">Backup Successful</span>
+          <span class="text-gray-500">— when a backup completes successfully</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
   <% if notifier.persisted? %>
     <div class="flex items-center gap-2">
       <%= form.check_box :enabled, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>

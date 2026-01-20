@@ -11,6 +11,8 @@ class Notifier < ApplicationRecord
   validates :type, presence: true, inclusion: { in: NOTIFIER_TYPES.keys }
 
   scope :enabled, -> { where(enabled: true) }
+  scope :for_success, -> { enabled.where(notify_on_success: true) }
+  scope :for_failure, -> { enabled.where(notify_on_failure: true) }
 
   def type_name
     NOTIFIER_TYPES[type]
@@ -46,8 +48,14 @@ class Notifier < ApplicationRecord
   end
 
   def self.notify_failure(backup_run)
-    enabled.find_each do |notifier|
-      NotifierDeliveryJob.perform_later(notifier, backup_run)
+    for_failure.find_each do |notifier|
+      NotifierDeliveryJob.perform_later(notifier, backup_run, :failure)
+    end
+  end
+
+  def self.notify_success(backup_run)
+    for_success.find_each do |notifier|
+      NotifierDeliveryJob.perform_later(notifier, backup_run, :success)
     end
   end
 end

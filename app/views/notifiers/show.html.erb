@@ -73,6 +73,27 @@
         <% end %>
 
         <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-900">Notify On</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+            <div class="flex flex-wrap gap-2">
+              <% if @notifier.notify_on_failure? %>
+                <span class="inline-flex items-center rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
+                  Failure
+                </span>
+              <% end %>
+              <% if @notifier.notify_on_success? %>
+                <span class="inline-flex items-center rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                  Success
+                </span>
+              <% end %>
+              <% unless @notifier.notify_on_failure? || @notifier.notify_on_success? %>
+                <span class="text-gray-500">None selected</span>
+              <% end %>
+            </div>
+          </dd>
+        </div>
+
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
           <dt class="text-sm font-medium text-gray-900">Created</dt>
           <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
             <%= @notifier.created_at.strftime("%B %d, %Y at %I:%M %p") %>

@@ -69,6 +69,11 @@ class BackupRun < ApplicationRecord
     BackupFailureNotificationJob.perform_later(self)
   end
 
+  def notify_success
+    return unless success?
+    BackupSuccessNotificationJob.perform_later(self)
+  end
+
   private
     def record_result(result)
       update!(
@@ -77,7 +82,11 @@ class BackupRun < ApplicationRecord
         finished_at: Time.current
       )
 
-      notify_failure unless result[:success]
+      if result[:success]
+        notify_success
+      else
+        notify_failure
+      end
     end
 
     def record_failure(error)

@@ -17,6 +17,7 @@ class NotifiersController < ApplicationController
 
   def create
     @notifier = Notifier.build(params[:notifier])
+    @notifier.assign_attributes(params[:notifier].permit(:notify_on_success, :notify_on_failure))
 
     if @notifier.save
       redirect_to notifier_path(@notifier), notice: "Notifier was successfully created."
@@ -26,7 +27,7 @@ class NotifiersController < ApplicationController
   end
 
   def update
-    @notifier.assign_attributes(params[:notifier].permit(:name, :enabled))
+    @notifier.assign_attributes(params[:notifier].permit(:name, :enabled, :notify_on_success, :notify_on_failure))
     @notifier.config = @notifier.class.config_from_params(params[:notifier])
 
     if @notifier.save
