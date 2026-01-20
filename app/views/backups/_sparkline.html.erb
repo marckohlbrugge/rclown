@@ -1,0 +1,53 @@
+<%
+  values = data.compact
+  return if values.empty?
+
+  width = 400
+  height = 80
+  padding = 4
+
+  min_val = values.min
+  max_val = values.max
+  range = max_val - min_val
+  range = 1 if range == 0
+
+  points = values.each_with_index.map do |val, i|
+    x = padding + (i.to_f / (values.size - 1).clamp(1, Float::INFINITY)) * (width - 2 * padding)
+    y = height - padding - ((val - min_val).to_f / range) * (height - 2 * padding)
+    "#{x.round(2)},#{y.round(2)}"
+  end.join(" ")
+
+  area_points = "#{padding},#{height - padding} #{points} #{width - padding},#{height - padding}"
+%>
+
+<svg viewBox="0 0 <%= width %> <%= height %>" class="w-full h-20" preserveAspectRatio="none">
+  <%# Gradient fill under the line %>
+  <defs>
+    <linearGradient id="gradient-<%= color.delete('#') %>" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="<%= color %>" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="<%= color %>" stop-opacity="0.02"/>
+    </linearGradient>
+  </defs>
+
+  <%# Area fill %>
+  <polygon points="<%= area_points %>" fill="url(#gradient-<%= color.delete('#') %>)"/>
+
+  <%# Line %>
+  <polyline
+    points="<%= points %>"
+    fill="none"
+    stroke="<%= color %>"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <%# Data points %>
+  <% values.each_with_index do |val, i| %>
+    <%
+      x = padding + (i.to_f / (values.size - 1).clamp(1, Float::INFINITY)) * (width - 2 * padding)
+      y = height - padding - ((val - min_val).to_f / range) * (height - 2 * padding)
+    %>
+    <circle cx="<%= x.round(2) %>" cy="<%= y.round(2) %>" r="3" fill="<%= color %>" opacity="0.8"/>
+  <% end %>
+</svg>
