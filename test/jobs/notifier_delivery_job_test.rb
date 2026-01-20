@@ -3,12 +3,12 @@ require "test_helper"
 class NotifierDeliveryJobTest < ActiveJob::TestCase
   include ActionMailer::TestHelper
 
-  test "delivers notification and updates last_notified_at" do
+  test "delivers failure notification and updates last_notified_at" do
     notifier = notifiers(:email_notifier)
     backup_run = backup_runs(:failed_run)
 
     assert_emails 2 do
-      NotifierDeliveryJob.perform_now(notifier, backup_run)
+      NotifierDeliveryJob.perform_now(notifier, backup_run, :failure)
     end
 
     notifier.reload
@@ -16,21 +16,54 @@ class NotifierDeliveryJobTest < ActiveJob::TestCase
     assert_nil notifier.last_error
   end
 
+  test "delivers success notification when notify_on_success is enabled" do
+    notifier = notifiers(:email_notifier)
+    notifier.update!(notify_on_success: true)
+    backup_run = backup_runs(:successful_run)
+
+    assert_emails 2 do
+      NotifierDeliveryJob.perform_now(notifier, backup_run, :success)
+    end
+
+    notifier.reload
+    assert_not_nil notifier.last_notified_at
+  end
+
   test "skips disabled notifier" do
     notifier = notifiers(:disabled_email_notifier)
     backup_run = backup_runs(:failed_run)
 
     assert_no_emails do
-      NotifierDeliveryJob.perform_now(notifier, backup_run)
+      NotifierDeliveryJob.perform_now(notifier, backup_run, :failure)
     end
   end
 
-  test "skips non-failed backup run" do
+  test "skips success event when notify_on_success is false" do
+    notifier = notifiers(:email_notifier)
+    notifier.update!(notify_on_success: false)
+    backup_run = backup_runs(:successful_run)
+
+    assert_no_emails do
+      NotifierDeliveryJob.perform_now(notifier, backup_run, :success)
+    end
+  end
+
+  test "skips failure event when notify_on_failure is false" do
+    notifier = notifiers(:email_notifier)
+    notifier.update!(notify_on_failure: false)
+    backup_run = backup_runs(:failed_run)
+
+    assert_no_emails do
+      NotifierDeliveryJob.perform_now(notifier, backup_run, :failure)
+    end
+  end
+
+  test "skips when backup_run status doesnt match event type" do
     notifier = notifiers(:email_notifier)
     backup_run = backup_runs(:successful_run)
 
     assert_no_emails do
-      NotifierDeliveryJob.perform_now(notifier, backup_run)
+      NotifierDeliveryJob.perform_now(notifier, backup_run, :failure)
     end
   end
 
