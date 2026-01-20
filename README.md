@@ -4,6 +4,8 @@ A friendly web UI for backing up your object storage buckets by [Marc Köhlbrugg
 
 Rclown wraps the battle-tested [rclone](https://rclone.org/) in a simple interface. Schedule backups, see what's happening, get notified when something breaks. Supports Cloudflare R2, Backblaze B2, Amazon S3, and other S3-compatible providers.
 
+![Rclown screenshot](docs/screenshot.png)
+
 ## Features
 
 - **Multi-provider support**: Cloudflare R2, Backblaze B2, Amazon S3
