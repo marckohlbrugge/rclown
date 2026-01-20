@@ -2,6 +2,23 @@ module Notifiers
   class Webhook < Notifier
     validate :validate_url
 
+    def self.config_from_params(params)
+      {
+        url: params[:url],
+        headers: parse_headers(params[:headers]),
+        include_logs: params[:include_logs] == "1"
+      }.to_json
+    end
+
+    def self.parse_headers(headers_string)
+      return {} if headers_string.blank?
+
+      headers_string.split("\n").each_with_object({}) do |line, hash|
+        key, value = line.split(":", 2).map(&:strip)
+        hash[key] = value if key.present? && value.present?
+      end
+    end
+
     def url
       parsed_config["url"]
     end
