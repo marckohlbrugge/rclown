@@ -1,4 +1,4 @@
-<%= form_with model: notifier, class: "space-y-6", data: { controller: "conditional-fields" } do |form| %>
+<%= form_with model: notifier, scope: :notifier, url: notifier.persisted? ? notifier_path(notifier) : notifiers_path, class: "space-y-6", data: { controller: "conditional-fields" } do |form| %>
   <% if notifier.errors.any? %>
     <div class="rounded-xl border-2 border-red-200 bg-red-50 p-4">
       <h3 class="font-medium text-red-800"><%= pluralize(notifier.errors.count, "error") %> prohibited this notifier from being saved:</h3>
@@ -119,7 +119,7 @@
   <% end %>
 
   <div class="flex items-center justify-end gap-x-4 border-t border-gray-200 pt-6">
-    <%= link_to "Cancel", notifier.persisted? ? notifier : notifiers_path, class: "px-4 py-3 text-sm font-semibold text-gray-600 hover:text-gray-900" %>
+    <%= link_to "Cancel", notifier.persisted? ? notifier_path(notifier) : notifiers_path, class: "px-4 py-3 text-sm font-semibold text-gray-600 hover:text-gray-900" %>
     <%= form.submit notifier.persisted? ? "Update Notifier" : "Create Notifier", class: "rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-500 cursor-pointer" %>
   </div>
 <% end %>
