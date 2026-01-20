@@ -1,0 +1,10 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "141f0582cbc2dfa4f2de59b31ddf5086de7179ee7a0298be3d58c13495fd50ed",
+      "note": "False positive: array form of Open3.capture3 prevents shell injection"
+    }
+  ],
+  "updated": "2026-01-20",
+  "brakeman_version": "7.0.2"
+}
