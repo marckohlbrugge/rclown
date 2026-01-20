@@ -18,38 +18,28 @@ Rclown wraps the battle-tested [rclone](https://rclone.org/) in a simple interfa
 
 ## Deployment
 
-Rclown is a Rails application designed for self-hosting. You'll need:
-- Ruby 3.3+
-- SQLite
-- [rclone](https://rclone.org/) installed on the server
-
-### Environment Variables
-
-```bash
-# Required: Active Record Encryption keys (generate with: bin/rails db:encryption:init)
-ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=your-primary-key
-ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=your-deterministic-key
-ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=your-salt
-
-# Required: HTTP Basic Auth
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=your-secure-password
-
-# Optional: Email notifications
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USERNAME=your-username
-SMTP_PASSWORD=your-password
-NOTIFICATION_EMAIL=alerts@example.com
-```
+Rclown is designed for self-hosting. The Docker images include everything you need (Ruby, SQLite, rclone).
 
 ### Docker
 
-Coming soon.
+The easiest way to self-host Rclown is with our pre-built Docker images. See [Docker Deployment](docs/docker-deployment.md) for details.
+
+```sh
+docker run -v rclown:/rails/storage \
+  -e SECRET_KEY_BASE=$(openssl rand -hex 64) \
+  -e HTTP_AUTH_USERNAME=admin \
+  -e HTTP_AUTH_PASSWORD=your-password \
+  -p 80:80 \
+  ghcr.io/marckohlbrugge/rclown:main
+```
 
 ### Kamal
 
-Coming soon.
+For deploying your own fork with customizations, see [Kamal Deployment](docs/kamal-deployment.md).
+
+### Dokku
+
+For Dokku-based hosting, see [Dokku Deployment](docs/dokku-deployment.md).
 
 ## Development
 
