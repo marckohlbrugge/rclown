@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_20_104643) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_21_050820) do
   create_table "backup_runs", force: :cascade do |t|
     t.integer "backup_id", null: false
     t.datetime "created_at", null: false
@@ -43,6 +43,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_104643) do
     t.string "source_path"
     t.integer "source_storage_id", null: false
     t.datetime "updated_at", null: false
+    t.boolean "verify_enabled", default: true, null: false
+    t.decimal "verify_tolerance_percent", default: "0.1", null: false
     t.index ["destination_storage_id"], name: "index_backups_on_destination_storage_id"
     t.index ["source_storage_id"], name: "index_backups_on_source_storage_id"
   end

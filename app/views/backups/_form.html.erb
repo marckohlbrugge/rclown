@@ -71,6 +71,20 @@
     <p class="mt-2 text-xs text-gray-500">Default: size + modification time. Size Only: compare sizes only (good for migration). Checksum: compare by hash (thorough but slower).</p>
   </div>
 
+  <div class="space-y-4">
+    <p class="text-sm font-semibold text-gray-700">Verification</p>
+    <div class="flex items-center gap-x-3">
+      <%= form.check_box :verify_enabled, class: "size-5 rounded-lg border-2 border-gray-300 text-blue-600 focus:ring-blue-500" %>
+      <%= form.label :verify_enabled, "Verify after sync", class: "text-sm text-gray-700" %>
+    </div>
+    <div class="flex items-center gap-2">
+      <%= form.label :verify_tolerance_percent, "Tolerance:", class: "text-sm text-gray-700" %>
+      <%= form.number_field :verify_tolerance_percent, step: 0.01, min: 0, max: 100, class: "w-24" %>
+      <span class="text-sm text-gray-600">%</span>
+    </div>
+    <p class="text-xs text-gray-500">Compares object counts after sync. Tolerance allows for small differences due to continuous writes. Set to 0 for exact match, or disable verification entirely for busy buckets.</p>
+  </div>
+
   <div class="flex items-center gap-x-3">
     <%= form.check_box :enabled, class: "size-5 rounded-lg border-2 border-gray-300 text-blue-600 focus:ring-blue-500" %>
     <%= form.label :enabled, "Enabled", class: "text-sm font-semibold text-gray-700" %>

@@ -17,7 +17,7 @@ class Rclone::Executor
     @config_file = generate_config
     result = execute_rclone(@config_file)
 
-    if result[:success] && !backup_run.dry_run?
+    if result[:success] && !backup_run.dry_run? && backup.verify_enabled?
       result = verify_backup(result)
     end
 
@@ -82,13 +82,30 @@ class Rclone::Executor
         return result
       end
 
-      if source_size[:count] == dest_size[:count] && source_size[:bytes] == dest_size[:bytes]
-        backup_run.append_log("[VERIFY] OK - counts and sizes match\n")
+      if counts_within_tolerance?(source_size, dest_size)
+        if exact_match?(source_size, dest_size)
+          backup_run.append_log("[VERIFY] OK - counts and sizes match\n")
+        else
+          backup_run.append_log("[VERIFY] OK - within #{backup.verify_tolerance_percent}% tolerance\n")
+        end
         result
       else
-        backup_run.append_log("[VERIFY] MISMATCH - source and destination differ\n")
+        backup_run.append_log("[VERIFY] MISMATCH - source and destination differ beyond #{backup.verify_tolerance_percent}% tolerance\n")
         { success: false, exit_code: result[:exit_code] }
       end
+    end
+
+    def exact_match?(source_size, dest_size)
+      source_size[:count] == dest_size[:count] && source_size[:bytes] == dest_size[:bytes]
+    end
+
+    def counts_within_tolerance?(source_size, dest_size)
+      tolerance = backup.verify_tolerance_percent / 100.0
+
+      min_count = (source_size[:count] * (1 - tolerance)).floor
+      min_bytes = (source_size[:bytes] * (1 - tolerance)).floor
+
+      dest_size[:count] >= min_count && dest_size[:bytes] >= min_bytes
     end
 
     def format_bytes(bytes)
