@@ -16,7 +16,7 @@ class ScheduleBackupsJob < ApplicationJob
   private
     def cleanup_orphaned_runs
       BackupRun.running.find_each do |run|
-        next if run.process_running?
+        next if run.worker_running? || run.process_running?
 
         Rails.logger.info "Cleaning up orphaned backup run ##{run.id}"
         run.append_log("\n\nBackup interrupted (process no longer running)")
