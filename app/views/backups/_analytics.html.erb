@@ -1,0 +1,48 @@
+<% data = backup.chart_data %>
+<% stats = backup.chart_stats %>
+
+<% if data.any? %>
+  <div class="bg-white rounded-2xl border-2 border-gray-200">
+    <div class="px-4 py-6 sm:px-6">
+      <h3 class="text-base font-semibold text-gray-900">Analytics</h3>
+      <p class="mt-1 text-sm text-gray-500">Last 30 days of backup history</p>
+    </div>
+    <div class="border-t border-gray-100 px-4 py-6 sm:px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <%# Size Chart %>
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="text-sm font-medium text-gray-900">Backup Size</h4>
+            <div class="text-right text-sm">
+              <span class="text-gray-500">Latest:</span>
+              <span class="font-medium text-gray-900"><%= format_bytes(stats[:size][:latest]) %></span>
+            </div>
+          </div>
+          <%= render "backups/sparkline", data: data.map { |d| d[:size_bytes] }, color: "#3b82f6" %>
+          <div class="mt-3 flex justify-between text-xs text-gray-500">
+            <span>Min: <%= format_bytes(stats[:size][:min]) %></span>
+            <span>Avg: <%= format_bytes(stats[:size][:avg]) %></span>
+            <span>Max: <%= format_bytes(stats[:size][:max]) %></span>
+          </div>
+        </div>
+
+        <%# Duration Chart %>
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h4 class="text-sm font-medium text-gray-900">Backup Duration</h4>
+            <div class="text-right text-sm">
+              <span class="text-gray-500">Latest:</span>
+              <span class="font-medium text-gray-900"><%= format_duration(stats[:duration][:latest]) %></span>
+            </div>
+          </div>
+          <%= render "backups/sparkline", data: data.map { |d| d[:duration_seconds] }, color: "#10b981" %>
+          <div class="mt-3 flex justify-between text-xs text-gray-500">
+            <span>Min: <%= format_duration(stats[:duration][:min]) %></span>
+            <span>Avg: <%= format_duration(stats[:duration][:avg]) %></span>
+            <span>Max: <%= format_duration(stats[:duration][:max]) %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
