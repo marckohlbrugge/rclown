@@ -215,4 +215,114 @@ class BackupTest < ActiveSupport::TestCase
     assert @backup.valid?
     assert_equal 90, @backup.retention_days
   end
+
+  # Chart data tests
+  test "chart_data returns empty array when no successful runs" do
+    backup = backups(:weekly_backup)
+    backup.runs.destroy_all
+    assert_equal [], backup.chart_data
+  end
+
+  test "chart_data returns data for successful non-dry runs" do
+    backup = backups(:weekly_backup)
+    backup.runs.destroy_all
+
+    # Create successful runs with data
+    run1 = backup.runs.create!(
+      status: :success,
+      dry_run: false,
+      started_at: 2.days.ago,
+      finished_at: 2.days.ago + 5.minutes,
+      source_bytes: 1000
+    )
+    run2 = backup.runs.create!(
+      status: :success,
+      dry_run: false,
+      started_at: 1.day.ago,
+      finished_at: 1.day.ago + 10.minutes,
+      source_bytes: 2000
+    )
+
+    data = backup.chart_data
+    assert_equal 2, data.size
+    assert_equal 1000, data.first[:size_bytes]
+    assert_equal 2000, data.last[:size_bytes]
+  end
+
+  test "chart_data excludes dry runs" do
+    backup = backups(:weekly_backup)
+    backup.runs.destroy_all
+
+    backup.runs.create!(
+      status: :success,
+      dry_run: true,
+      started_at: 1.day.ago,
+      finished_at: 1.day.ago + 5.minutes,
+      source_bytes: 1000
+    )
+
+    assert_equal [], backup.chart_data
+  end
+
+  test "chart_data excludes failed runs" do
+    backup = backups(:weekly_backup)
+    backup.runs.destroy_all
+
+    backup.runs.create!(
+      status: :failed,
+      dry_run: false,
+      started_at: 1.day.ago,
+      finished_at: 1.day.ago + 5.minutes,
+      source_bytes: 1000
+    )
+
+    assert_equal [], backup.chart_data
+  end
+
+  test "chart_stats returns nil when no data" do
+    backup = backups(:weekly_backup)
+    backup.runs.destroy_all
+    assert_nil backup.chart_stats
+  end
+
+  test "chart_stats calculates correct statistics" do
+    backup = backups(:weekly_backup)
+    backup.runs.destroy_all
+
+    backup.runs.create!(
+      status: :success,
+      dry_run: false,
+      started_at: 3.days.ago,
+      finished_at: 3.days.ago + 60.seconds,
+      source_bytes: 1000
+    )
+    backup.runs.create!(
+      status: :success,
+      dry_run: false,
+      started_at: 2.days.ago,
+      finished_at: 2.days.ago + 120.seconds,
+      source_bytes: 3000
+    )
+    backup.runs.create!(
+      status: :success,
+      dry_run: false,
+      started_at: 1.day.ago,
+      finished_at: 1.day.ago + 180.seconds,
+      source_bytes: 2000
+    )
+
+    stats = backup.chart_stats
+
+    # Size stats
+    assert_equal 2000, stats[:size][:latest]
+    assert_equal 1000, stats[:size][:min]
+    assert_equal 3000, stats[:size][:max]
+    assert_equal 2000, stats[:size][:avg]
+
+    # Duration stats
+    assert_equal 180, stats[:duration][:latest]
+    assert_equal 60, stats[:duration][:min]
+    assert_equal 180, stats[:duration][:max]
+    assert_equal 120, stats[:duration][:avg]
+  end
 end
