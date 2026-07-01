@@ -71,6 +71,45 @@ class Backup < ApplicationRecord
     end
   end
 
+  def chart_data(days: 30)
+    successful_runs = runs.successful
+      .where(dry_run: false)
+      .where("started_at >= ?", days.days.ago)
+      .where.not(source_bytes: nil)
+      .order(:started_at)
+
+    successful_runs.map do |run|
+      {
+        date: run.started_at,
+        size_bytes: run.source_bytes,
+        duration_seconds: run.duration&.to_i
+      }
+    end
+  end
+
+  def chart_stats
+    data = chart_data
+    return nil if data.empty?
+
+    sizes = data.map { |d| d[:size_bytes] }.compact
+    durations = data.map { |d| d[:duration_seconds] }.compact
+
+    {
+      size: {
+        latest: sizes.last,
+        min: sizes.min,
+        max: sizes.max,
+        avg: sizes.any? ? (sizes.sum.to_f / sizes.size).round : nil
+      },
+      duration: {
+        latest: durations.last,
+        min: durations.min,
+        max: durations.max,
+        avg: durations.any? ? (durations.sum.to_f / durations.size).round : nil
+      }
+    }
+  end
+
   private
     def build_rclone_path(bucket_name, path, remote_name)
       path.present? ? "#{remote_name}:#{bucket_name}/#{path}" : "#{remote_name}:#{bucket_name}"
