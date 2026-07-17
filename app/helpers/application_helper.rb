@@ -7,4 +7,34 @@ module ApplicationHelper
       end
     end
   end
+
+  def format_bytes(bytes)
+    return "—" unless bytes
+
+    if bytes >= 1_000_000_000
+      format("%.2f GB", bytes / 1_000_000_000.0)
+    elsif bytes >= 1_000_000
+      format("%.2f MB", bytes / 1_000_000.0)
+    elsif bytes >= 1_000
+      format("%.2f KB", bytes / 1_000.0)
+    else
+      "#{bytes} B"
+    end
+  end
+
+  def format_duration(seconds)
+    return "—" unless seconds
+
+    hours = (seconds / 3600).floor
+    minutes = ((seconds % 3600) / 60).floor
+    secs = (seconds % 60).floor
+
+    if hours > 0
+      "#{hours}h #{minutes}m"
+    elsif minutes > 0
+      "#{minutes}m #{secs}s"
+    else
+      "#{secs}s"
+    end
+  end
 end
