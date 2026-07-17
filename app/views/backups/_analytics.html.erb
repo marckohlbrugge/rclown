@@ -1,5 +1,5 @@
 <% data = backup.chart_data %>
-<% stats = backup.chart_stats %>
+<% stats = backup.chart_stats(data) %>
 
 <% if data.any? %>
   <div class="bg-white rounded-2xl border-2 border-gray-200">

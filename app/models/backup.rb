@@ -87,8 +87,7 @@ class Backup < ApplicationRecord
     end
   end
 
-  def chart_stats
-    data = chart_data
+  def chart_stats(data = chart_data)
     return nil if data.empty?
 
     sizes = data.map { |d| d[:size_bytes] }.compact
