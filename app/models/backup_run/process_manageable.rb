@@ -38,6 +38,17 @@ module BackupRun::ProcessManageable
     end
   end
 
+  def worker_running?
+    return false unless worker_pid.present?
+
+    begin
+      Process.kill(0, worker_pid)
+      true
+    rescue Errno::ESRCH, Errno::EPERM
+      false
+    end
+  end
+
   def process_stats
     return nil unless process_running?
 
