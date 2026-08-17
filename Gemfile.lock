@@ -84,8 +84,8 @@ GEM
     bcrypt_pbkdf (1.1.2-x86_64-darwin)
     bigdecimal (4.1.2)
     bindex (0.8.1)
-    bootsnap (1.24.6)
-      msgpack (~> 1.2)
+    bootsnap (1.25.0)
+      msgpack (~> 1.5)
     brakeman (8.0.5)
       racc
     builder (3.3.0)
@@ -193,7 +193,7 @@ GEM
       railties (>= 7.1)
       stimulus-rails
       turbo-rails
-    msgpack (1.8.3)
+    msgpack (1.8.4)
     net-imap (0.6.4.1)
       date
       net-protocol
