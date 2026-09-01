@@ -22,6 +22,9 @@ Rclown wraps the battle-tested [rclone](https://rclone.org/) in a simple interfa
 
 Rclown is designed for self-hosting. The Docker images include everything you need (Ruby, SQLite, rclone).
 
+> [!IMPORTANT]
+> Rclown depends on [rclone](https://rclone.org/). The Docker images include it, but for non-Docker deployments you need to install `rclone` on the host.
+
 ### Docker
 
 The easiest way to self-host Rclown is with our pre-built Docker images. See [Docker Deployment](docs/docker-deployment.md) for details.
@@ -44,6 +47,8 @@ For deploying your own fork with customizations, see [Kamal Deployment](docs/kam
 For Dokku-based hosting, see [Dokku Deployment](docs/dokku-deployment.md).
 
 ## Development
+
+Before running Rclown locally, install [rclone](https://rclone.org/) on your machine.
 
 ```bash
 git clone https://github.com/marckohlbrugge/rclown.git
