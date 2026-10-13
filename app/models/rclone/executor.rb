@@ -158,7 +158,7 @@ class Rclone::Executor
 
     def upload_cutoff_flags
       case backup.destination_storage.provider.provider_type
-      when "cloudflare_r2", "amazon_s3"
+      when "cloudflare_r2", "amazon_s3", "s3_compatible"
         [ "--s3-upload-cutoff", "0" ]
       when "backblaze_b2"
         [ "--b2-upload-cutoff", "0" ]

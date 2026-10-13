@@ -9,6 +9,8 @@ module Provider::RcloneConfigurable
       backblaze_b2_config(name)
     when "amazon_s3"
       amazon_s3_config(name)
+    when "s3_compatible"
+      s3_compatible_config(name)
     end
   end
 
@@ -46,6 +48,25 @@ module Provider::RcloneConfigurable
       CONFIG
       config += "region = #{region}\n" if region.present?
       config += "endpoint = #{endpoint}\n" if endpoint.present?
+      config
+    end
+
+    # Generic S3 API (Linode, DigitalOcean Spaces, Wasabi, MinIO, Hetzner, ...).
+    # "Other" turns off AWS-only behaviour like checksum trailers. Ceph-backed
+    # providers (Linode among them) also reject requests whose signature covers
+    # Accept-Encoding, so leave that header out of the signature.
+    # See https://github.com/rclone/rclone/issues/8206
+    def s3_compatible_config(name)
+      config = <<~CONFIG
+        [#{name}]
+        type = s3
+        provider = Other
+        access_key_id = #{access_key_id}
+        secret_access_key = #{secret_access_key}
+        endpoint = #{endpoint}
+        sign_accept_encoding = false
+      CONFIG
+      config += "region = #{region}\n" if region.present?
       config
     end
 end

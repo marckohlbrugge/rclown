@@ -17,3 +17,10 @@ amazon:
   region: "us-east-1"
   access_key_id: "test_access_key_aws"
   secret_access_key: "test_secret_key_aws"
+
+linode:
+  name: "Linode Object Storage"
+  provider_type: s3_compatible
+  endpoint: "https://in-maa-1.linodeobjects.com"
+  access_key_id: "test_access_key_linode"
+  secret_access_key: "test_secret_key_linode"

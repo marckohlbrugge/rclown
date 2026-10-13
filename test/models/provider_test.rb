@@ -45,6 +45,13 @@ class ProviderTest < ActiveSupport::TestCase
     assert provider.valid?
   end
 
+  test "s3_compatible requires endpoint" do
+    provider = providers(:linode)
+    provider.endpoint = nil
+    assert_not provider.valid?
+    assert_includes provider.errors[:endpoint], "can't be blank"
+  end
+
   test "encrypts access_key_id when saved" do
     # Create a new provider to test encryption (fixtures store plain text)
     provider = Provider.create!(
@@ -88,6 +95,7 @@ class ProviderTest < ActiveSupport::TestCase
     assert_equal "Cloudflare R2", @provider.provider_type_name
     assert_equal "Backblaze B2", providers(:backblaze).provider_type_name
     assert_equal "Amazon S3", providers(:amazon).provider_type_name
+    assert_equal "S3 Compatible", providers(:linode).provider_type_name
   end
 
   test "generates cloudflare r2 rclone config" do
@@ -116,5 +124,23 @@ class ProviderTest < ActiveSupport::TestCase
     assert_includes config, "access_key_id = test_access_key_aws"
     assert_includes config, "secret_access_key = test_secret_key_aws"
     assert_includes config, "region = us-east-1"
+  end
+
+  test "generates s3 compatible rclone config" do
+    config = providers(:linode).rclone_config_section("remote")
+    assert_includes config, "[remote]"
+    assert_includes config, "type = s3"
+    assert_includes config, "provider = Other"
+    assert_includes config, "access_key_id = test_access_key_linode"
+    assert_includes config, "secret_access_key = test_secret_key_linode"
+    assert_includes config, "endpoint = https://in-maa-1.linodeobjects.com"
+    assert_includes config, "sign_accept_encoding = false"
+    assert_not_includes config, "region ="
+  end
+
+  test "s3 compatible rclone config includes region when set" do
+    provider = providers(:linode)
+    provider.region = "in-maa-1"
+    assert_includes provider.rclone_config_section("remote"), "region = in-maa-1"
   end
 end

@@ -8,7 +8,7 @@ Rclown wraps the battle-tested [rclone](https://rclone.org/) in a simple interfa
 
 ## Features
 
-- **Multi-provider support**: Cloudflare R2, Backblaze B2, Amazon S3
+- **Multi-provider support**: Cloudflare R2, Backblaze B2, Amazon S3, and any S3-compatible provider (Linode, DigitalOcean Spaces, Wasabi, MinIO, Hetzner, ...)
 - **Bucket discovery**: Automatically find and import buckets from your providers
 - **Scheduled backups**: Daily or weekly, with dry-run support
 - **Flexible paths**: Back up entire buckets or specific sub-paths
