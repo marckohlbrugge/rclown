@@ -54,7 +54,7 @@ module Provider::RcloneConfigurable
     # Generic S3 API (Linode, DigitalOcean Spaces, Wasabi, MinIO, Hetzner, ...).
     # "Other" turns off AWS-only behaviour like checksum trailers. Ceph-backed
     # providers (Linode among them) also reject requests whose signature covers
-    # Accept-Encoding, so leave that header out of the signature.
+    # Accept-Encoding or the x-id query parameter, so leave both out.
     # See https://github.com/rclone/rclone/issues/8206
     def s3_compatible_config(name)
       config = <<~CONFIG
@@ -65,6 +65,7 @@ module Provider::RcloneConfigurable
         secret_access_key = #{secret_access_key}
         endpoint = #{endpoint}
         sign_accept_encoding = false
+        use_x_id = false
       CONFIG
       config += "region = #{region}\n" if region.present?
       config

@@ -138,6 +138,9 @@ class Rclone::Executor
         "--disable", "ServerSideAcrossConfigs"
       ]
 
+      # Syncing to the bucket root puts .deleted inside the destination, which
+      # rclone only allows when a filter keeps the sync out of it.
+      cmd += [ "--exclude", "/.deleted/**" ] if backup.destination_path.blank?
       cmd += upload_cutoff_flags
       cmd += comparison_mode_flags
       cmd << "--dry-run" if backup_run.dry_run?

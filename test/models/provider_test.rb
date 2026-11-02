@@ -135,6 +135,7 @@ class ProviderTest < ActiveSupport::TestCase
     assert_includes config, "secret_access_key = test_secret_key_linode"
     assert_includes config, "endpoint = https://in-maa-1.linodeobjects.com"
     assert_includes config, "sign_accept_encoding = false"
+    assert_includes config, "use_x_id = false"
     assert_not_includes config, "region ="
   end
 
