@@ -74,6 +74,9 @@ USER 1000:1000
 COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --chown=rails:rails --from=build /rails /rails
 
+# Run Solid Queue inside Puma so backups and scheduled jobs run without a separate worker container.
+ENV SOLID_QUEUE_IN_PUMA="true"
+
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
